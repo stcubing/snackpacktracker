@@ -1,8 +1,13 @@
-import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
-import { useState } from 'react';
+import { Camera, CameraType, CameraView, useCameraPermissions } from 'expo-camera';
+import { useRouter } from 'expo-router';
+import { useState, useRef } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function App() {
+export default function CameraPage() {
+
+	const cameraRef = useRef<Camera>(null);
+	const router = useRouter();
+
 	const [facing, setFacing] = useState<CameraType>('back');
 	const [permission, requestPermission] = useCameraPermissions();
 
@@ -28,15 +33,32 @@ export default function App() {
 		} else {
 			setFacing('back');
 		}
+		console.log("flipping camera")
+	}
+
+	// take the actual picture
+	async function takePhoto() {
+		if (cameraRef.current) {
+			const photo = await cameraRef.current.takePictureAsync();
+			console.log(photo.uri);
+
+			// pass result
+			router.push({
+				pathname: "/media",
+				params: {media: photo.uri, type: "photo"}
+			})
+		}
+
 	}
 
 	return (
 		<View style={styles.container}>
-		<CameraView style={styles.camera} facing={facing} />
+		<CameraView style={styles.camera} facing={facing} ref={cameraRef} />
 		<View style={styles.buttonContainer}>
 			<TouchableOpacity style={styles.button} onPress={flipCamera}>
-			<Text style={styles.text}>flip</Text>
+				<Text style={styles.text}>flip</Text>
 			</TouchableOpacity>
+			<Button title="take photo" onPress={takePhoto} />
 		</View>
 		</View>
 	);
