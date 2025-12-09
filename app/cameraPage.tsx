@@ -1,7 +1,7 @@
 import { Camera, CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter } from 'expo-router';
 import { useState, useRef } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function CameraPage() {
 
@@ -10,6 +10,23 @@ export default function CameraPage() {
 
 	const [facing, setFacing] = useState<CameraType>('back');
 	const [permission, requestPermission] = useCameraPermissions();
+
+
+	const currentDate = new Date();
+
+	const year = currentDate.getFullYear();
+	const month = currentDate.getMonth() + 1;
+	const day = currentDate.getDate();
+
+	const hours = currentDate.getHours().toString().padStart(2,'0');
+	const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+	const seconds = currentDate.getSeconds().toString().padStart(2, '0');
+
+	const date = `${day}/${month}/${year}`;
+	const time = `${hours}:${minutes}:${seconds}`;
+
+	console.log(`current date: ${date}`);
+	console.log(`current time: ${time}`);
 
 	// cam permissions not loaded yet
 	if (!permission) {
@@ -45,7 +62,7 @@ export default function CameraPage() {
 			// pass result
 			router.push({
 				pathname: "/media",
-				params: {media: photo.uri, type: "photo"}
+				params: {media: photo.uri, type: "photo", date: date, time: time}
 			})
 		}
 
@@ -53,13 +70,15 @@ export default function CameraPage() {
 
 	return (
 		<View style={styles.container}>
-		<CameraView style={styles.camera} facing={facing} ref={cameraRef} />
-		<View style={styles.buttonContainer}>
-			<TouchableOpacity style={styles.button} onPress={flipCamera}>
-				<Text style={styles.text}>flip</Text>
-			</TouchableOpacity>
-			<Button title="take photo" onPress={takePhoto} />
-		</View>
+			<View style={styles.cameraContainer}>
+				<CameraView style={styles.camera} facing={facing} ref={cameraRef} />
+			</View>
+			<View style={styles.buttonContainer}>
+				<Pressable onPress={takePhoto} style={styles.shutterbutton} />
+				<Pressable onPress={flipCamera} style={styles.flipbutton}>
+					<Text style={styles.text}>flip the camera around</Text>
+				</Pressable>
+			</View>
 		</View>
 	);
 }
@@ -68,29 +87,57 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	message: {
 		textAlign: 'center',
 		paddingBottom: 10,
 	},
-	camera: {
-		flex: 1,
-	},
-	buttonContainer: {
-		position: 'absolute',
-		bottom: 64,
-		flexDirection: 'row',
-		backgroundColor: 'transparent',
+	
+	cameraContainer: {
 		width: '100%',
-		paddingHorizontal: 64,
+		height: '100%',
+		padding: 10	
 	},
-	button: {
-		flex: 1,
+	camera: {
+		width: '100%',
+		height: '100%',
+		overflow: 'hidden',
+		borderRadius: 40,
+	},
+
+	buttonContainer: {
+		backgroundColor: 'green',
+		width: '90%',
+		position: 'absolute',
+		bottom: 50,
+		// backgroundColor: 'transparent',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+
+	shutterbutton: {
+		backgroundColor: 'blue',
+		padding: 50,
+		width: 100,
+		borderRadius: '100%',
+
+		borderColor: 'black',
+		borderWidth: 20,
+	},
+
+	flipbutton: {
+		position: 'absolute',
+		left: 30,
+		backgroundColor: 'red',
 		alignItems: 'center',
+		justifyContent: 'center',
+
+		borderRadius: 10,
+		padding: 10,
 	},
 	text: {
 		fontSize: 24,
-		fontWeight: 'bold',
 		color: 'white',
 	},
 });
