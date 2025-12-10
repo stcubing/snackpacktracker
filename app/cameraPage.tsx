@@ -12,22 +12,6 @@ export default function CameraPage() {
 	const [permission, requestPermission] = useCameraPermissions();
 
 
-	const currentDate = new Date();
-
-	const year = currentDate.getFullYear();
-	const month = currentDate.getMonth() + 1;
-	const day = currentDate.getDate();
-
-	const hours = currentDate.getHours().toString().padStart(2,'0');
-	const minutes = currentDate.getMinutes().toString().padStart(2, '0');
-	const seconds = currentDate.getSeconds().toString().padStart(2, '0');
-
-	const date = `${day}/${month}/${year}`;
-	const time = `${hours}:${minutes}:${seconds}`;
-
-	console.log(`current date: ${date}`);
-	console.log(`current time: ${time}`);
-
 	// cam permissions not loaded yet
 	if (!permission) {
 		return <View />;
@@ -58,6 +42,22 @@ export default function CameraPage() {
 		if (cameraRef.current) {
 			const photo = await cameraRef.current.takePictureAsync();
 			console.log(photo.uri);
+
+			const currentDate = new Date();
+
+			const year = currentDate.getFullYear();
+			const month = currentDate.getMonth() + 1;
+			const day = currentDate.getDate();
+
+			const hours = currentDate.getHours().toString().padStart(2, '0');
+			const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+			const seconds = currentDate.getSeconds().toString().padStart(2, '0');
+
+			const date = `${day}/${month}/${year}`;
+			const time = `${hours}:${minutes}:${seconds}`;
+
+			console.log(`current date: ${date}`);
+			console.log(`current time: ${time}`);
 
 			// pass result
 			router.push({

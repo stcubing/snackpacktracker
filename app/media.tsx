@@ -1,6 +1,10 @@
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { Image, View, Text, StyleSheet, Pressable, ScrollView, TextInput, VirtualizedList, SafeAreaView } from "react-native";
+import { Image, View, Text, StyleSheet, Pressable, ScrollView, TextInput } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { saveEntry, loadEntries } from '@/lib/storage';
+import { Entry } from '@/types/entry';
 
 import Button from '@/components/Button';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -8,10 +12,10 @@ import DropDownPicker from 'react-native-dropdown-picker';
 export default function mediaPage() {
     const { media, type, date, time } = useLocalSearchParams(); // params from camera
     const router = useRouter();
-    const [text, setText] = useState('');
+    const [notesText, setNotesText] = useState('');
 
     const [meatOpen, setMeatOpen] = useState(false);
-    const [meatValue, setMeatValue] = useState(null);
+    const [meatValue, setMeatValue] = useState<string[]>([]);
     const [meatItems, setMeatItems] = useState([
         { label: 'Chicken', value: 'chicken' },
         { label: 'Beef', value: 'beef' },
@@ -19,14 +23,14 @@ export default function mediaPage() {
     ]);
     
     const [baseOpen, setBaseOpen] = useState(false);
-    const [baseValue, setBaseValue] = useState(null);
+    const [baseValue, setBaseValue] = useState<string[]>([]);
     const [baseItems, setBaseItems] = useState([
         { label: 'Chips', value: 'chips' },
         { label: 'Rice', value: 'rice' }
     ]);
     
     const [sauceOpen, setSauceOpen] = useState(false);
-    const [sauceValue, setSauceValue] = useState(null);
+    const [sauceValue, setSauceValue] = useState<string[]>([]);
     const [sauceItems, setSauceItems] = useState([
         { label: 'BBQ', value: 'bbq' },
         { label: 'Chilli', value: 'chilli' },
@@ -37,8 +41,56 @@ export default function mediaPage() {
         { label: 'Sweet Chilli', value: 'sweetchilli' },
     ]);
 
+    // pushes the log into storage + goes home
+    async function submit() {
 
-    console.log(`displaying photo ${media}`)
+        console.log("submit pressed")
+
+        if (baseValue && meatValue) {
+            const newEntry: Entry = {
+                id: 12345,
+                photo: media,
+                date: date,
+                time: time,
+                base: baseValue,
+                meat: meatValue,
+                sauce: sauceValue,
+                rating: 4,
+                notes: notesText,
+
+            }
+
+            // check if entries exist first (append new entry if so)
+            let existing: Entry[] = await loadEntries();
+
+            console.log(newEntry);
+            // existing.push(newEntry);
+            // console.log(existing);
+
+            const newArray: Entry[] = [...existing, newEntry];
+            console.log(newArray);
+
+            saveEntry(newArray);
+            
+            router.push({
+                pathname: "/",
+                params: {}
+            })
+
+
+        }
+
+
+        // if (meatValue) {
+        //     saveEntry("meat", meatValue.toString());
+
+        // }
+
+            
+
+    }
+
+    // console.log(`displaying photo ${media}`)
     
     return (
         <View style={styles.container} >
@@ -107,14 +159,14 @@ export default function mediaPage() {
                 <Text style={styles.h3}>additional notes</Text>
                 <TextInput
                 style={styles.input}
-                onChangeText={setText}
-                value={text}
+                onChangeText={setNotesText}
+                value={notesText}
                 multiline={true}
                 placeholder="notes" />
 
-                <Link href="/cameraPage" push asChild>
-                    <Button theme="primary" label="submit" />
-                </Link>
+                <Button theme="primary" label="submit" onPress={submit}/>
+                {/* <Link href="/cameraPage" push asChild>
+                </Link> */}
             </ScrollView>
         </View>
     )
