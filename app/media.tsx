@@ -1,7 +1,6 @@
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Image, View, Text, StyleSheet, Pressable, ScrollView, TextInput } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { saveEntry, loadEntries } from '@/lib/storage';
 import { Entry } from '@/types/entry';
@@ -9,11 +8,14 @@ import { generateUUID } from '@/utils/uuid';
 
 import Button from '@/components/Button';
 import DropDownPicker from 'react-native-dropdown-picker';
+import StarRating from 'react-native-star-rating-widget';
+
 
 export default function mediaPage() {
     const { media, type, date, time } = useLocalSearchParams(); // params from camera
     const router = useRouter();
     const [notesText, setNotesText] = useState('');
+    const [rating, setRating] = useState(0);
 
     const [meatOpen, setMeatOpen] = useState(false);
     const [meatValue, setMeatValue] = useState<string[]>([]);
@@ -56,7 +58,7 @@ export default function mediaPage() {
                 base: baseValue,
                 meat: meatValue,
                 sauce: sauceValue,
-                rating: 4,
+                rating: rating,
                 notes: notesText,
 
             }
@@ -156,6 +158,17 @@ export default function mediaPage() {
                 <Text style={styles.text}>taken at</Text>
                 <Text style={styles.h3}>date: {date}</Text>
                 <Text style={styles.h3}>time: {time}</Text>
+
+                <StarRating
+                    rating={rating}
+                    onChange={setRating}
+                    starSize={50}
+                    animationConfig={{
+                        duration: 300,
+                        scale: 1.02,
+                        delay: 0
+                    }}
+                />
 
                 <Text style={styles.h3}>additional notes</Text>
                 <TextInput
