@@ -1,5 +1,5 @@
 export interface Entry {
-    id: number;
+    id: string;
     photo: string | string[];
     date: string | string[];
     time: string | string[];

@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { saveEntry, loadEntries } from '@/lib/storage';
 import { Entry } from '@/types/entry';
+import { generateUUID } from '@/utils/uuid';
 
 import Button from '@/components/Button';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -48,7 +49,7 @@ export default function mediaPage() {
 
         if (baseValue && meatValue) {
             const newEntry: Entry = {
-                id: 12345,
+                id: generateUUID(),
                 photo: media,
                 date: date,
                 time: time,
