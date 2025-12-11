@@ -1,10 +1,12 @@
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Image, View, Text, StyleSheet, Pressable, ScrollView, TextInput } from "react-native";
+import * as MediaLibrary from 'expo-media-library';
 
 import { saveEntry, loadEntries } from '@/lib/storage';
 import { Entry } from '@/types/entry';
 import { generateUUID } from '@/utils/uuid';
+import { pickImageAsync } from "@/utils/imageUpload";
 
 import Button from '@/components/Button';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -43,6 +45,26 @@ export default function mediaPage() {
         { label: 'Tomato', value: 'tomato' },
         { label: 'Sweet Chilli', value: 'sweetchilli' },
     ]);
+
+
+    const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
+        
+    // use image picker function + permissions cos u cant put that inside the other thing apparently
+    const pickImage = async () => {
+        if (!permissionResponse?.granted) {
+            await requestPermission();
+        }
+        pickImageAsync();
+    }
+
+
+    // taken or uploaded photo
+    let isUpload;
+    if (type === "photo") {
+        isUpload = false;
+    } else {
+        isUpload = true;
+    }
 
     // pushes the log into storage + goes home
     async function submit() {
@@ -102,11 +124,22 @@ export default function mediaPage() {
                     <Image source={{ uri: media }} style={styles.image} />
                 </View>
 
-                <Link href="/cameraPage" push asChild>
-                    <Pressable style={styles.retakebutton}>
-                        <Text style={styles.text}>retake</Text>
+                {isUpload ? (
+
+                    <Pressable onPress={pickImage} style={styles.retakebutton}>
+                        <Text style={styles.text}>reupload</Text>
                     </Pressable>
-                </Link>
+
+                ) : (
+
+                    <Link href="/cameraPage" push asChild>
+                        <Pressable style={styles.retakebutton}>
+                            <Text style={styles.text}>retake</Text>
+                        </Pressable>
+                    </Link>
+
+                )}
+
                 <Text style={styles.text}>fill in details</Text>
 
 
