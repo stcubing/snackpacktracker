@@ -8,7 +8,7 @@ import { saveEntry, loadEntries, clearEntries } from '@/lib/storage';
 import { pickImageAsync } from '@/utils/imageUpload';
 
 
-export default function homescreen() {
+export default function index() {
 
     const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
     
@@ -20,10 +20,10 @@ export default function homescreen() {
         pickImageAsync();
     }
     
-    useEffect(() => {
-        loadEntries();
+    // useEffect(() => {
+    //     loadEntries();
         
-    }, []);
+    // }, []);
 
 
     return (

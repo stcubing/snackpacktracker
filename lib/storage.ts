@@ -1,26 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Entry } from '@/types/entry';
 
-// // Store data
-// const storeData = async (key: string, value: string) => {
-    
-// };
-
-// Retrieve data
-const retrieveData = async (key: string) => {
-    try {
-        const value = await AsyncStorage.getItem(key);
-        if (value !== null) {
-            console.log('Retrieved data:', value);
-            return value;
-        }
-    } catch (e) {
-        console.error('Error retrieving data:', e);
-    }
-    return null;
-};
-
-
 
 export async function saveEntry(value: Entry[]) {
     try {

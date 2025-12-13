@@ -13,7 +13,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import StarRating from 'react-native-star-rating-widget';
 
 
-export default function mediaPage() {
+export default function media() {
     const { media, type, date, time } = useLocalSearchParams(); // params from camera
     const router = useRouter();
     const [notesText, setNotesText] = useState('');
