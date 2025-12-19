@@ -94,6 +94,9 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         overflow: 'hidden',
         borderRadius: 10,
-    }
+    },
+    entryInfo: {
+
+    },
 
 })
