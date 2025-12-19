@@ -2,90 +2,98 @@ import { useEffect, useRef, useState } from 'react';
 import { Button, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Link, router } from 'expo-router';
 import * as MediaLibrary from 'expo-media-library';
+import { Image } from 'expo-image';
 
 import { saveEntry, loadEntries, clearEntries } from '@/lib/storage';
 import { pickImageAsync } from '@/utils/imageUpload';
 import { Entry } from '@/types/entry';
 
-import EntriesViewer from '@/components/EntriesViewer';
 
-
-// async function fetchData() {
-
-
-//     const resultsArray = [];
-
-//     const promArray = await Promise.all(await loadEntries());
-
-//     for (let i = 0; i < promArray.length; i++) {
-//         resultsArray.push(promArray[i]);
-//     }
-
-//     return resultsArray;
-
-// }
 
 export default function library() {
 
-    // useEffect(() => {
-    //     const init = async () => {
 
-    //     }
-    // }, []);
-    // console.log("jkahsdlkasdjhhdasjkkjhldasljhkasdhjkldaslkhj")
+    // const entryList: Entry[] = [];
+    const [entryList, setEntrylist] = useState<Entry[]>([]);
 
- 
+    useEffect(() => {
 
-    // const views = []
+        const fetchData = async () => {
+            try {
+                let data: Entry[] = await loadEntries();
 
-    // loadEntries().then(entries => {
-    //     console.log(entries.length);
-    //     for (let i = 0; i < entries.length; i++) {
+                setEntrylist(data);
 
-    //         let currentEntry = entries[i]
-    //         console.log(i);
-    //         console.log(currentEntry);
+            } catch (error) {
+                console.log("error fetching data", error);
+            }
+            
+        }
 
-    //         views.push(
-    //             <View>
-    //                 <Text>{i}</Text>
-    //                 <Text>1</Text>
-    //             </View>
-    //         )
-
-    //         // return (
-    //         //     <View>
-    //         //         <Text>hi</Text>
-    //         //         <Text>{currentEntry["id"]}</Text>
-    //         //     </View>
-    //         // )
-    //     }
-    // })
-    // console.log(loadEntries().then(data => data));
-
-    // console.log(fetchData);
-    // console.log(gurt);
-    // console.log(fetchData().length);
-
-    // console.log(`number of entries: ${loadEntries().then[Promise].length}`);
-    // console.log(loadEntries);
-
-    // const views = [];
-    // for (let i = 0; i < loadEntries().then.length; i++) {
-    //     console.log(`gurt: ${i}`)
-    //     views.push(
-    //         <View key={i}>
-    //             <Text>{i}</Text>
-    //         </View>
-    //     )
-    // }
+        fetchData();
+        
+    }, []);
+    
 
     return (
         <ScrollView>
 
-            <Text>library</Text>
-            <EntriesViewer />
+            <Text style={styles.h1}>library</Text>
+
+            { entryList.map(entry => (
+
+                <View style={styles.entry}>
+
+                    <View style={styles.imageContainer}>
+                        <Image source={entry.photo} style={styles.image} />
+                    </View>
+
+                    <View style={styles.entryInfo}>
+                        <Text>{entry.time} {entry.date}</Text>
+                        <Text>{entry.id}</Text>
+                        {/* <Text>uri starts with {entry.photo[0]}</Text> */}
+
+                        <Text>base: {(entry.base).join(", ")}</Text>
+                        <Text>meat: {(entry.meat).join(", ")}</Text>
+                        <Text>sauce: {(entry.sauce).join(", ")}</Text>
+
+                        <Text>rating: {entry.rating}</Text>
+                        <Text>notes: {entry.notes}</Text>
+
+                    </View>
+
+                </View>
+
+            ))}
             
         </ScrollView>
     )
 }
+
+const styles = StyleSheet.create({
+    h1: {
+        fontSize: 30,
+    },
+    entry: {
+        backgroundColor: 'lightgrey',
+        borderRadius: 20,
+        padding: 10,
+        width: '80%',
+        margin: 5,
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 15,
+    },
+    image: {
+        width: '100%',
+        height: '100%',
+    },
+    imageContainer: {
+        // width: 100,
+        height: '100%',
+        aspectRatio: 1,
+        overflow: 'hidden',
+        borderRadius: 10,
+    }
+
+})
