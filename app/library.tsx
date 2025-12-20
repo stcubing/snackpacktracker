@@ -33,13 +33,18 @@ export default function library() {
         fetchData();
         
     }, []);
+
+    async function clear() {
+        clearEntries();
+        router.replace({ pathname: "/library" })
+    }
     
 
     return (
         <ScrollView>
 
             <Text style={styles.h1}>library</Text>
-            <Button onPress={clearEntries} title="clear entries" />
+            <Button onPress={clear} title="clear entries" />
 
             { entryList.map(entry => (
 

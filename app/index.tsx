@@ -17,18 +17,17 @@ export default function index() {
 
 
     const [fontsLoaded] = useFonts({ FiraCode_400Regular });
-    // if (!fontsLoaded) {
-        // return <SplashScreen />; // Or <SplashScreen /> from expo-splash-screen
-    // }
 
     const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
     
     // use image picker function + permissions cos u cant put that inside the other thing apparently
-    const pickImage = async () => {
+    
+    async function pickImage() {
         if (!permissionResponse?.granted) {
             await requestPermission();
         }
         pickImageAsync();
+    
     }
 
     

@@ -2,8 +2,6 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 
 import { MaterialIcons, FontAwesome, Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
-type ButtonSize = 'square' | 'smallRect' | 'largeRect';
-
 
 type Props = {
     icon: keyof typeof MaterialIcons.glyphMap | keyof typeof Ionicons.glyphMap;
@@ -12,22 +10,29 @@ type Props = {
 };
 
 export default function IconButton({ icon, size, onPress }: Props) {
+    
     const sizeStyles = {
         square: styles.square,
         smallRect: styles.smallRect,
         largeRect: styles.largeRect,
+        small: styles.small,
+        shutter: styles.shutter,
     };
 
-    if (icon === 'dice') {
+    // ionicons
+    if (icon === 'dice' || icon === 'stats-chart') {
         return (
             <Pressable style={[styles.iconButton, sizeStyles[size]]} onPress={onPress}>
-                <Ionicons name="dice" color="white" size={50} />
+                <Ionicons name={icon} color="white" size={50} />
             </Pressable>
         );
-    } else if (icon === 'stats-chart') {
+    }
+
+    // smaller
+    if (size === 'small') {
         return (
             <Pressable style={[styles.iconButton, sizeStyles[size]]} onPress={onPress}>
-                <Ionicons name="stats-chart" color="white" size={50} />
+                <MaterialIcons name={icon} color="white" size={30} />
             </Pressable>
         );
     }
@@ -44,11 +49,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#141414', 
         justifyContent: 'center',
         alignItems: 'center',
+
         borderRadius: 10,
-        borderColor: '#505050',
+        borderColor: 'rgba(255,255,255,0.3)',
         borderWidth: 2,
-        
+
+        shadowColor: '#000',
+        shadowOpacity: .5,
+        shadowOffset: {width: 0, height: 4},
+        shadowRadius: 10,
     },
+
     square: {
         height: 200,
         width: '49%',
@@ -61,5 +72,16 @@ const styles = StyleSheet.create({
     largeRect: {
         width: '100%',
         height: 100,
+    },
+    small: {
+        padding: 15,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        backdropFilter: 'blur(15px)',
+    },
+    shutter: {
+        padding: 30,
+        borderRadius: 100,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        backdropFilter: 'blur(15px)',
     }
 });

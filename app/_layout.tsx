@@ -13,7 +13,7 @@ export default function RootLayout() {
 		// <Stack.Navigator>
 		// </Stack.Navigator>
 		<React.Fragment>
-			<StatusBar style="dark" />
+			<StatusBar style="light" />
 			<Stack
 				screenOptions={{
 					headerShown: false,

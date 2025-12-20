@@ -2,6 +2,7 @@ import { Camera, CameraType, CameraView, useCameraPermissions } from 'expo-camer
 import { useRouter } from 'expo-router';
 import { useState, useRef } from 'react';
 import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import IconButton from '@/components/IconButton';
 
 export default function CameraPage() {
 
@@ -21,10 +22,15 @@ export default function CameraPage() {
 	if (!permission.granted) {
 		return (
 		<View style={styles.container}>
-			<Text style={styles.message}>We need your permission to show the camera</Text>
+			<Text style={styles.message}>give permission to use camera</Text>
 			<Button onPress={requestPermission} title="grant permission" />
 		</View>
 		);
+	}
+
+	// go back
+	function back() {
+		router.back()
 	}
 
 	// flip camera
@@ -73,11 +79,11 @@ export default function CameraPage() {
 			<View style={styles.cameraContainer}>
 				<CameraView style={styles.camera} facing={facing} ref={cameraRef} />
 			</View>
+
 			<View style={styles.buttonContainer}>
-				<Pressable onPress={takePhoto} style={styles.shutterbutton} />
-				<Pressable onPress={flipCamera} style={styles.flipbutton}>
-					<Text style={styles.text}>flip the camera around</Text>
-				</Pressable>
+				<IconButton onPress={back} icon="arrow-back" size="small" />
+				<IconButton onPress={takePhoto} icon="circle" size="shutter" />
+				<IconButton onPress={flipCamera} icon="flip-camera-ios" size="small" />
 			</View>
 		</View>
 	);
@@ -85,9 +91,11 @@ export default function CameraPage() {
 
 const styles = StyleSheet.create({
 	container: {
+		backgroundColor: '#070707',
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+		
 	},
 	message: {
 		textAlign: 'center',
@@ -95,25 +103,28 @@ const styles = StyleSheet.create({
 	},
 	
 	cameraContainer: {
-		width: '100%',
-		height: '100%',
-		padding: 10	
+		width: '90%',
+		height: '90%',
+		// padding: 10	
 	},
 	camera: {
 		width: '100%',
 		height: '100%',
 		overflow: 'hidden',
-		borderRadius: 40,
+		borderRadius: 10,
 	},
-
+	
 	buttonContainer: {
-		backgroundColor: 'green',
-		width: '90%',
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-around',
+
+		// backgroundColor: 'green',
+		width: '80%',
 		position: 'absolute',
-		bottom: 50,
+		bottom: 70,
 		// backgroundColor: 'transparent',
-		justifyContent: 'center',
-		alignItems: 'center'
 	},
 
 	shutterbutton: {
@@ -126,16 +137,6 @@ const styles = StyleSheet.create({
 		borderWidth: 20,
 	},
 
-	flipbutton: {
-		position: 'absolute',
-		left: 30,
-		backgroundColor: 'red',
-		alignItems: 'center',
-		justifyContent: 'center',
-
-		borderRadius: 10,
-		padding: 10,
-	},
 	text: {
 		fontSize: 24,
 		color: 'white',
