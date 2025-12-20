@@ -1,14 +1,25 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Button, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Link, router } from 'expo-router';
+import { Link, router, SplashScreen } from 'expo-router';
 import * as MediaLibrary from 'expo-media-library';
+import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
+import AppLoading from 'expo-splash-screen';
 
 import { saveEntry, loadEntries, clearEntries } from '@/lib/storage';
 import { pickImageAsync } from '@/utils/imageUpload';
+import IconButton from '@/components/IconButton';
+
+
 
 
 export default function index() {
+
+
+    const [fontsLoaded] = useFonts({ FiraCode_400Regular });
+    // if (!fontsLoaded) {
+        // return <SplashScreen />; // Or <SplashScreen /> from expo-splash-screen
+    // }
 
     const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
     
@@ -19,47 +30,88 @@ export default function index() {
         }
         pickImageAsync();
     }
+
+    
     
     // useEffect(() => {
     //     loadEntries();
         
     // }, []);
 
+    async function toCamera() {
+        router.push({pathname: "/cameraPage"})
+    }
+    async function toLibrary() {
+        router.push({pathname: "/library"})
+    }
+
 
     return (
-        <View>
-            <Text style={styles.heading}>snack pack tracker</Text>
+        <View style={styles.background}>
 
-            <Link href="/cameraPage" push asChild>
-                <Pressable style={styles.button}>
-                    <Text style={styles.text}>take photo</Text>
-                </Pressable>
-            </Link>
+            <View style={styles.container}>
 
-            {/* <Link href="/camera" push asChild>
-                <Pressable style={styles.button}>
-                    <Text style={styles.text}>from files</Text>
-                </Pressable>
-            </Link> */}
-            <Button onPress={pickImage} title="from files" />
+                <View style={styles.headerText} >
+                    <Text style={styles.heading}>snackpacktracker</Text>
+                    <Text style={styles.version}>v0.1</Text>
+                </View>
             
-            <Link href="/library" push asChild>
-                <Pressable style={styles.button}>
-                    <Text style={styles.text}>library</Text>
-                </Pressable>
-            </Link>
-            
-            <Button onPress={clearEntries} title="clear entries" />
-            {/* <Text style={styles.heading}>{loadEntries}</Text> */}
+                <View style={styles.btnRow}>
+                    <IconButton onPress={toCamera} icon="camera-alt" size="square" />
+                    <IconButton onPress={pickImage} icon="add-to-photos" size="square" />
+                </View>
+
+                <View style={styles.btnRow}>
+                    <IconButton onPress={toCamera}  icon="dice" size="smallRect" />
+                    <IconButton onPress={pickImage} icon="stats-chart" size="smallRect" />
+                </View>
+
+                <IconButton onPress={toLibrary} icon="photo-library" size="largeRect" />
+
+                
+                {/* <Text style={styles.heading}>{loadEntries}</Text> */}
+            </View>
         </View>
     )
 }
 
 
 const styles = StyleSheet.create({
+
+    background: {
+        backgroundColor: '#070707',
+        height: '100%',
+        // paddingTop: 150,
+        // paddingLeft: 25,
+        // paddingRight: 25,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    container: {
+        width: '90%',
+        display: 'flex',
+        alignItems: 'center',
+        // backgroundColor: 'red',
+        gap: 10,
+    },
+
+    headerText: {
+        paddingTop: 100,
+        paddingBottom: 100,
+        // backgroundColor: 'red',
+    },
     heading: {
-        color: "#000000",
-        fontSize: 30,
+        fontFamily: 'FiraCode_400Regular',
+        color: "#ffffff",
+        fontSize: 35,
+        lineHeight: 40,
+    },
+    version: {
+        fontFamily: 'FiraCode_400Regular',
+        color: '#ffffff',
+        opacity: 0.5,
+        fontSize: 15,
     },
     button: {
         backgroundColor: 'blue',
@@ -69,6 +121,18 @@ const styles = StyleSheet.create({
     text: {
         color: 'white',
         fontSize: 40
+    },
+
+
+    btnRow: {
+        width: '100%',
+        flexDirection: 'row',
+        display: 'flex',
+        justifyContent: 'center',
+        gap: 10,
+        // overflow: 'hidden',
     }
+
+
 })
 

@@ -39,6 +39,7 @@ export default function library() {
         <ScrollView>
 
             <Text style={styles.h1}>library</Text>
+            <Button onPress={clearEntries} title="clear entries" />
 
             { entryList.map(entry => (
 
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightgrey',
         borderRadius: 20,
         padding: 10,
-        width: '80%',
+        // width: '80%',
         margin: 5,
         display: 'flex',
         flexDirection: 'row',
@@ -89,14 +90,14 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     imageContainer: {
-        // width: 100,
-        height: '100%',
+        width: 100,
+        // height: '100%',
         aspectRatio: 1,
         overflow: 'hidden',
         borderRadius: 10,
     },
     entryInfo: {
-
+        
     },
 
 })

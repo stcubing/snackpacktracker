@@ -43,7 +43,7 @@ export default function media() {
         { label: 'Mayo', value: 'mayo' },
         { label: 'Hummus', value: 'hummus' },
         { label: 'Tomato', value: 'tomato' },
-        { label: 'Sweet Chilli', value: 'sweetchilli' },
+        { label: 'Sweet Chilli', value: 'sweet chilli' },
     ]);
 
 

@@ -4,12 +4,22 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import React from "react";
 
+
 export default function RootLayout() {
 
-  return (
-    <React.Fragment>
-      <StatusBar style="dark"/>
-      <Stack />
-    </React.Fragment>
-  );
+	// const Stack = createStackNavigator();
+
+	return (
+		// <Stack.Navigator>
+		// </Stack.Navigator>
+		<React.Fragment>
+			<StatusBar style="dark" />
+			<Stack
+				screenOptions={{
+					headerShown: false,
+				}}
+
+			/>
+		</React.Fragment>
+	);
 }
