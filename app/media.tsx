@@ -12,6 +12,7 @@ import { pickImageAsync } from "@/utils/imageUpload";
 import Button from '@/components/Button';
 import DropDownPicker from 'react-native-dropdown-picker';
 import StarRating from 'react-native-star-rating-widget';
+import { Rating } from 'react-simple-star-rating';
 import IconButton from "@/components/IconButton";
 import TextButton from "@/components/TextButton";
 
@@ -24,15 +25,15 @@ export default function media() {
     const router = useRouter();
     const [notesText, setNotesText] = useState('');
     const [rating, setRating] = useState(0);
-
-
+    
+    
     const [baseOpen, setBaseOpen] = useState(false);
     const [baseValue, setBaseValue] = useState<string[]>([]);
     const [baseItems, setBaseItems] = useState([
         { label: 'chips', value: 'chips' },
         { label: 'rice', value: 'rice' }
     ]);
-
+    
     const [meatOpen, setMeatOpen] = useState(false);
     const [meatValue, setMeatValue] = useState<string[]>([]);
     const [meatItems, setMeatItems] = useState([
@@ -52,7 +53,7 @@ export default function media() {
         { label: 'tomato', value: 'tomato' },
         { label: 'sweet chilli', value: 'sweet chilli' },
     ]);
-
+    
     
     // close other pickers when one is open
     const onBaseOpen = useCallback(() => {
@@ -67,10 +68,16 @@ export default function media() {
         setBaseOpen(false);
         setMeatOpen(false);
     }, []);
+    
 
-
+    
+    const handleRating = (rate: number) => {
+        setRating(rate);
+    }
+    
+    
     const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-        
+    
     // use image picker function + permissions cos u cant put that inside the other thing apparently
     const pickImage = async () => {
         if (!permissionResponse?.granted) {
@@ -234,7 +241,7 @@ export default function media() {
                     />
                 </View>
                 {/* maybe replace this star component with something else. idk if i like the scaling */}
-                <StarRating
+                {/* <StarRating
                     style={styles.rating}
                     rating={rating}
                     onChange={setRating}
@@ -250,7 +257,17 @@ export default function media() {
                         delay: 0
                     }}
         
-                />
+                /> */}
+                <div style={styles.rating}>
+                    <Rating
+                        onClick={handleRating}
+                        allowFraction={true}
+                        transition={true}
+                        fillColor="white"
+                        emptyColor="#141414"
+                        size={60}
+                    />
+                </div>
                 <TextInput
                     style={styles.input}
                     onChangeText={setNotesText}
