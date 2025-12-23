@@ -5,7 +5,7 @@ import * as MediaLibrary from 'expo-media-library';
 
 import { saveEntry, loadEntries, clearEntries } from '@/lib/storage';
 import { pickImageAsync } from '@/utils/imageUpload';
-import { Entry } from '@/types/entry';
+import { Entry } from '@/types/Entry';
 
 
 export default function EntriesViewer() {

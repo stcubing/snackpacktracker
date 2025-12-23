@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Entry } from '@/types/entry';
+import { Entry } from '@/types/Entry';
 
 
 export async function saveEntry(value: Entry[]) {

@@ -6,7 +6,10 @@ import { Image } from 'expo-image';
 
 import { saveEntry, loadEntries, clearEntries } from '@/lib/storage';
 import { pickImageAsync } from '@/utils/imageUpload';
-import { Entry } from '@/types/entry';
+import { Entry } from '@/types/Entry';
+import IconButton from '@/components/IconButton';
+import TextButton from '@/components/TextButton';
+import EntryButton from '@/components/EntryButton';
 
 
 
@@ -41,38 +44,32 @@ export default function library() {
         clearEntries();
         router.replace({ pathname: "/library" })
     }
+
+    function back() {
+        router.back()
+    }
     
+    function toEntry(date: string) {
+        console.log("pressed", date);
+    }
 
     return (
         <View style={styles.background}>
-            <ScrollView>
+            <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
 
-                <Text style={styles.h1}>library</Text>
+
+                <View style={styles.top} >
+                    <IconButton onPress={back} icon="arrow-back" size="small" />
+                    <Text style={styles.heading}>library</Text>
+                </View>
 
                 <View style={styles.entryContainer}>
                     { entryList.map(entry => (
-                    
-                        <View style={styles.entry}>
-                            <View style={styles.imageContainer}>
-                                <Image source={entry.photo} style={styles.image} />
-                            </View>
-                            <Text>{entry.date}</Text>
-                            {/* <View style={styles.entryInfo}>
-                                <Text>{entry.time} {entry.date}</Text>
-                                <Text>{entry.id}</Text>
-                    
-                                <Text>base: {(entry.base).join(", ")}</Text>
-                                <Text>meat: {(entry.meat).join(", ")}</Text>
-                                <Text>sauce: {(entry.sauce).join(", ")}</Text>
-                    
-                                <Text>rating: {entry.rating}</Text>
-                                <Text>notes: {entry.notes}</Text>
-                    
-                                </View> */}
-                        </View>
+                        <EntryButton image={entry.photo} date={entry.date} onPress={toEntry(entry.date)} />
                     ))}
                 </View>
-                <Button onPress={clear} title="clear entries" />
+
+                <TextButton onPress={clear} text="clear all"/>
                 
             </ScrollView>
         </View>
@@ -81,53 +78,51 @@ export default function library() {
 
 const styles = StyleSheet.create({
 
+    heading: {
+        fontFamily: 'FiraCode_400Regular',
+        color: "#ffffff",
+        fontSize: 30,
+        lineHeight: 40,
+    },
+  
     background: {
         backgroundColor: '#070707',
         height: '100%',
-        // paddingTop: 150,
-        // paddingLeft: 25,
-        // paddingRight: 25,
+
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-
-    h1: {
-        fontSize: 30,
-        color: 'white',
-    },
-
-
-    entryContainer: {
-        backgroundColor: 'red',
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-    },
-
-    entry: {
-        backgroundColor: 'lightgrey',
-        borderRadius: 10,
-        // width: '30%',
-        margin: 5,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 5,
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-    },
-    imageContainer: {
-        width: 100,
-        // height: '100%',
-        aspectRatio: 1,
-        overflow: 'hidden',
-        borderRadius: 10,
-    },
-    entryInfo: {
         
     },
+
+    container: {
+        // backgroundColor: 'green',
+        width: '90%',
+        marginTop: 50,
+        paddingBottom: 100
+    },
+
+    top: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 30,
+        marginVertical: 50,
+    },
+
+    entryContainer: {
+        // width: '100%',
+        // backgroundColor: 'red',
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        // flex
+        gap: 5,
+        marginBottom: 30
+    },
+  
+
+    
 
 })

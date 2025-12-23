@@ -5,14 +5,13 @@ import * as MediaLibrary from 'expo-media-library';
 import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
 
 import { saveEntry, loadEntries } from '@/lib/storage';
-import { Entry } from '@/types/entry';
+import { Entry } from '@/types/Entry';
 import { generateUUID } from '@/utils/uuid';
 import { pickImageAsync } from "@/utils/imageUpload";
-
+import StarRating from 'react-native-star-rating-widget';
 import Button from '@/components/Button';
 import DropDownPicker from 'react-native-dropdown-picker';
-import StarRating from 'react-native-star-rating-widget';
-import { Rating } from 'react-simple-star-rating';
+
 import IconButton from "@/components/IconButton";
 import TextButton from "@/components/TextButton";
 
@@ -25,6 +24,11 @@ export default function media() {
     const router = useRouter();
     const [notesText, setNotesText] = useState('');
     const [rating, setRating] = useState(0);
+
+    const handleChange = useCallback(
+        (value: number) => setRating(Math.round((rating + value) * 5) / 10),
+        [rating],
+    );
     
     
     const [baseOpen, setBaseOpen] = useState(false);
@@ -71,10 +75,7 @@ export default function media() {
     
 
     
-    const handleRating = (rate: number) => {
-        setRating(rate);
-    }
-    
+
     
     const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
     
@@ -134,6 +135,10 @@ export default function media() {
 
         }            
 
+    }
+
+    function ratingCompleted(rating) {
+        console.log("Rating is: " + rating)
     }
 
     function retake() {
@@ -241,34 +246,27 @@ export default function media() {
                         onOpen={onSauceOpen}
                     />
                 </View>
-                {/* maybe replace this star component with something else. idk if i like the scaling */}
-                {/* <StarRating
-                    style={styles.rating}
-                    rating={rating}
-                    onChange={setRating}
-                    color='white'
-                    emptyColor='rgba(255,255,255,0.3)'
-                    starStyle={{
-                        margin: -2,
-                    }}
-                    starSize={70}
-                    animationConfig={{
-                        duration: 300,
-                        scale: 0.9,
-                        delay: 0
-                    }}
-        
-                /> */}
-                <div style={styles.rating}>
-                    <Rating
-                        onClick={handleRating}
-                        allowFraction={true}
-                        transition={true}
-                        fillColor="white"
-                        emptyColor="#141414"
-                        size={60}
+                
+              
+                <View style={styles.rating}>
+                    <StarRating
+                        style={styles.rating}
+                        rating={rating}
+                        onChange={setRating}
+                        color='white'
+                        emptyColor='rgba(255,255,255,0.3)'
+                        starStyle={{
+                            margin: -2,
+                        }}
+                        starSize={70}
+                        animationConfig={{
+                            duration: 300,
+                            scale: 0.9,
+                            delay: 0
+                        }}
                     />
-                </div>
+                </View>
+
                 <TextInput
                     style={styles.input}
                     onChangeText={setNotesText}
