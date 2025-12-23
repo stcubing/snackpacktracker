@@ -51,6 +51,8 @@ export default function CameraPage() {
 
 			const currentDate = new Date();
 
+			const ms = Date.now();
+
 			const year = currentDate.getFullYear();
 			const month = currentDate.getMonth() + 1;
 			const day = currentDate.getDate();
@@ -68,7 +70,7 @@ export default function CameraPage() {
 			// pass result
 			router.push({
 				pathname: "/media",
-				params: {media: photo.uri, type: "photo", date: date, time: time}
+				params: {media: photo.uri, type: "photo", date: date, time: time, ms: ms}
 			})
 		}
 

@@ -1,8 +1,9 @@
 export interface Entry {
     id: string;
     photo: string | string[];
-    date: string | string[];
+    date: string;
     time: string | string[];
+    ms: number
     base: string[];
     meat: string[];
     sauce: string[];

@@ -57,7 +57,7 @@ export const pickImageAsync = async () => {
 
         router.push({
             pathname: "/media",
-            params: { media: uri, type: "upload", date: date, time: time }
+            params: { media: uri, type: "upload", date: date, time: time, ms: lastMod }
         })
 
     } else {

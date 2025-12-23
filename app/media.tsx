@@ -21,7 +21,7 @@ export default function media() {
 
     const [fontsLoaded] = useFonts({ FiraCode_400Regular });
 
-    const { media, type, date, time } = useLocalSearchParams(); // params from camera
+    const { media, type, date, time, ms } = useLocalSearchParams(); // params from camera
     const router = useRouter();
     const [notesText, setNotesText] = useState('');
     const [rating, setRating] = useState(0);
@@ -105,6 +105,7 @@ export default function media() {
                 photo: media,
                 date: date,
                 time: time,
+                ms: ms,
                 base: baseValue,
                 meat: meatValue,
                 sauce: sauceValue,
