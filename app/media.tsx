@@ -101,7 +101,7 @@ export default function media() {
                 isUpload = true;
             }
         }
-    })
+    }, [])
 
 
     // pushes the log into storage + goes home
