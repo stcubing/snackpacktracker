@@ -49,7 +49,7 @@ export default function library() {
         router.back()
     }
     
-    function toEntry(date: string) {
+    async function toEntry(date: string) {
         console.log("pressed", date);
     }
 
@@ -65,7 +65,7 @@ export default function library() {
 
                 <View style={styles.entryContainer}>
                     { entryList.map(entry => (
-                        <EntryButton image={entry.photo} date={entry.date} onPress={toEntry(entry.date)} />
+                        <EntryButton key={entry.id} image={entry.photo} date={entry.date} onPress={toEntry(entry.date)} />
                     ))}
                 </View>
 

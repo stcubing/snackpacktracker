@@ -1,9 +1,11 @@
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
-import { Image, View, Text, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView } from "react-native";
-import * as MediaLibrary from 'expo-media-library';
+import { useCallback, useRef, useState } from "react";
+import { Image, View, Text, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView, Platform } from "react-native";
+import * as FileSystem from 'expo-file-system';
 import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
-
+import { captureRef } from "react-native-view-shot";
+import * as MediaLibrary from 'expo-media-library';
+import domtoimage from 'dom-to-image';
 import { saveEntry, loadEntries } from '@/lib/storage';
 import { Entry } from '@/types/Entry';
 import { generateUUID } from '@/utils/uuid';
@@ -19,6 +21,8 @@ import TextButton from "@/components/TextButton";
 export default function media() {
 
     const [fontsLoaded] = useFonts({ FiraCode_400Regular });
+
+    const imageRef = useRef<View>(null);
 
     const { media, type, date, time, ms } = useLocalSearchParams(); // params from camera
     const router = useRouter();
@@ -88,7 +92,7 @@ export default function media() {
 
         console.log("submit pressed")
 
-        if (baseValue && meatValue) {
+        if (baseValue && meatValue) { // fix this conditional here (if thats even needed)
             const newEntry: Entry = {
                 id: generateUUID(),
                 photo: media,
@@ -114,6 +118,39 @@ export default function media() {
             console.log(newArray);
 
             saveEntry(newArray);
+
+            // save file
+            if (Platform.OS !== 'web') {
+                try {
+                    // to do: take/save higher quality photos
+                    const localUri = await captureRef(imageRef, {
+                        // height: 440,
+                        quality: 1,
+                    });
+
+                    await MediaLibrary.saveToLibraryAsync(localUri);
+
+
+                } catch (e) {
+                    console.log(e);
+                }
+
+            }
+            // else { // web saving (not needed?)
+            //     try {
+            //         const dataUrl = await domtoimage.toJpeg(imageRef.current, {
+            //             quality: 1,
+            //         });
+
+            //         let link = document.createElement('a');
+            //         link.download = 'gurt.jpeg';
+            //         link.href = dataUrl;
+            //         link.click();
+            //     } catch (e) {
+            //         console.log(e);
+            //     }
+            // }
+
             
             router.push({
                 pathname: "/",
@@ -121,7 +158,9 @@ export default function media() {
             })
 
 
-        }            
+        } else {
+            console.log("missing hsp components!!");
+        }
 
     }
 
@@ -137,7 +176,7 @@ export default function media() {
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
                 <View style={styles.imageContainer} >
-                    <Image source={{ uri: media }} style={styles.image} />
+                    <Image ref={imageRef} source={{ uri: media }} style={styles.image} />
                     <View style={styles.dateTimeWrapper} >
                         <Text style={styles.dateTimeText}>{time}</Text>
                         <Text style={styles.dateTimeText}>{date}</Text>
