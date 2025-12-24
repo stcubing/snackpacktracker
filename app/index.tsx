@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Link, router, SplashScreen } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
 import AppLoading from 'expo-splash-screen';
@@ -19,23 +20,6 @@ export default function index() {
     const [fontsLoaded] = useFonts({ FiraCode_400Regular });
 
     const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-    
-    // use image picker function + permissions cos u cant put that inside the other thing apparently
-    
-    async function pickImage() {
-        if (!permissionResponse?.granted) {
-            await requestPermission();
-        }
-        pickImageAsync();
-    
-    }
-
-    
-    
-    // useEffect(() => {
-    //     loadEntries();
-        
-    // }, []);
 
     async function toCamera() {
         router.push({pathname: "/cameraPage"})
@@ -57,12 +41,12 @@ export default function index() {
             
                 <View style={styles.btnRow}>
                     <IconButton onPress={toCamera} icon="camera-alt" size="square" />
-                    <IconButton onPress={pickImage} icon="add-to-photos" size="square" />
+                    <IconButton onPress={pickImageAsync} icon="add-to-photos" size="square" />
                 </View>
 
                 <View style={styles.btnRow}>
                     <IconButton onPress={toCamera}  icon="dice" size="smallRect" />
-                    <IconButton onPress={pickImage} icon="stats-chart" size="smallRect" />
+                    <IconButton onPress={pickImageAsync} icon="stats-chart" size="smallRect" />
                 </View>
 
                 <IconButton onPress={toLibrary} icon="photo-library" size="largeRect" />
