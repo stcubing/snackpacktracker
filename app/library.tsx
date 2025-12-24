@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Link, router } from 'expo-router';
+import { Link, router, useFocusEffect } from 'expo-router';
 import * as MediaLibrary from 'expo-media-library';
 import { Image } from 'expo-image';
 
@@ -19,26 +19,31 @@ export default function library() {
     // const entryList: Entry[] = [];
     const [entryList, setEntrylist] = useState<Entry[]>([]);
 
-    useEffect(() => {
+    useFocusEffect(
+        useCallback(() => {
 
-        const fetchData = async () => {
-            try {
-                let data: Entry[] = await loadEntries();
-
-                data.sort((a, b) => a.ms - b.ms).reverse(); // sort chronologically
-                console.log(data);
-
-                setEntrylist(data);
-
-            } catch (error) {
-                console.log("error fetching data", error);
-            }
-            
-        }
-
-        fetchData();
+            const fetchData = async () => {
+                try {
+                    let data: Entry[] = await loadEntries();
         
-    }, []);
+                    data.sort((a, b) => a.ms - b.ms).reverse(); // sort chronologically
+                    console.log(data);
+        
+                    setEntrylist(data);
+        
+                } catch (error) {
+                    console.log("error fetching data", error);
+                }
+                
+            };
+
+            fetchData();
+
+        
+        }, [])
+    );
+
+    
 
     async function clear() {
         clearEntries();

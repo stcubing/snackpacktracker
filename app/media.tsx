@@ -6,7 +6,7 @@ import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
 import { captureRef } from "react-native-view-shot";
 import * as MediaLibrary from 'expo-media-library';
 import domtoimage from 'dom-to-image';
-import { saveEntry, loadEntries } from '@/lib/storage';
+import { saveEntry, loadEntries, deleteEntry } from '@/lib/storage';
 import { Entry } from '@/types/Entry';
 import { generateUUID } from '@/utils/uuid';
 import { pickImageAsync } from "@/utils/imageUpload";
@@ -192,8 +192,13 @@ export default function media() {
         router.push('/cameraPage');
     }
 
-    function deleteEntry() {
-        console.log("delet");
+    async function remove(id: string) {
+        console.log("deleting", id);
+        await deleteEntry(id);
+        router.back();
+    }
+    function update() {
+        console.log("updatye");
     }
     
     return (
@@ -212,9 +217,9 @@ export default function media() {
                     retake/reupload or delete
                     */}
 
-                    {type === "view" && <IconButton onPress={deleteEntry} icon="delete" size="small" />}
-                    {type === "photo" && <IconButton onPress={pickImageAsync} icon="add-to-photos" size="small" />}
-                    {type === "" && <IconButton onPress={retake} icon="loop" size="small" />}
+                    {type === "view" && <IconButton onPress={() => remove(id)} icon="delete" size="small" />}
+                    {type === "photo" && <IconButton onPress={retake} icon="loop" size="small" />}
+                    {type === "" && <IconButton onPress={pickImageAsync} icon="add-to-photos" size="small" />}
       
 
                 </View>
@@ -330,7 +335,11 @@ export default function media() {
                     autoCorrect={false}
                 />
                 <View style={styles.submitbtn}>
-                    <TextButton onPress={submit} text="submit"/>
+                    {type === "view" ? (
+                        <TextButton onPress={update} text="update"/>
+                    ) : (
+                        <TextButton onPress={submit} text="submit"/>
+                    )}
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>

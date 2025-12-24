@@ -32,10 +32,11 @@ export async function clearEntries(): Promise<void> {
     console.log("successfully cleared entries");
 }
 
+// get specific entry from id (library -> entry page)
 export async function getEntry(id: string) {
     const entries = await Promise.all(await loadEntries());
 
-    const matching = entries.find(item => item.id == id)
+    const matching = entries.find(item => item.id == id);
 
     if (matching) {    
         console.log("found");
@@ -55,6 +56,17 @@ export async function getEntry(id: string) {
         }
         return foundEntry;
     }
+}
 
+// delete specific entry based on id
+export async function deleteEntry(id: string) {
+    const entries = await Promise.all(await loadEntries());
+    const matching = entries.find(item => item.id == id);
 
+    if (matching) {
+        const index = entries.indexOf(matching);
+        entries.splice(index);
+        await AsyncStorage.setItem("entries", JSON.stringify(entries));
+        console.log(entries);
+    }
 }
