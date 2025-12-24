@@ -19,8 +19,6 @@ export default function index() {
 
     const [fontsLoaded] = useFonts({ FiraCode_400Regular });
 
-    const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-
     async function toCamera() {
         router.push({pathname: "/cameraPage"})
     }

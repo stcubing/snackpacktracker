@@ -74,18 +74,6 @@ export default function media() {
     }, []);
     
 
-    
-
-    
-    const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-    
-    // use image picker function + permissions cos u cant put that inside the other thing apparently
-    const pickImage = async () => {
-        if (!permissionResponse?.granted) {
-            await requestPermission();
-        }
-        pickImageAsync();
-    }
 
     // taken or uploaded photo
     let isUpload;
@@ -161,7 +149,7 @@ export default function media() {
                     retake/reupload or delete
                     */}
                     {isUpload ? (
-                        <IconButton onPress={pickImage} icon="loop" size="small" />
+                        <IconButton onPress={pickImageAsync} icon="loop" size="small" />
                     ) : (
                         <IconButton onPress={retake} icon="loop" size="small" />
                     )}
