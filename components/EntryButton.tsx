@@ -1,5 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
+import { getEntry } from '@/lib/storage';
 
 
 // type Props = {
@@ -8,10 +10,36 @@ import { Image } from 'expo-image';
 //     onPress: () => any;
 // };
 
-export default function EntryButton({ image, date, onPress }) {
+export default function EntryButton({ id, image, date }) {
+
+    async function toEntry(id: any) {
+        console.log("pressed", id);
+
+        const entry = await getEntry(id);
+        console.log(entry);
+
+        if (!entry) return;
+
+        router.push({
+            pathname: "/media",
+            params: {
+                id: id,
+                media: image,
+                type: "view",
+                date: entry["date"],
+                time: entry["time"],
+                ms: entry["ms"],
+                base: entry["base"],
+                meat: entry["meat"],
+                sauce: entry["sauce"],
+                rating: entry["rating"],
+                notes: entry["notes"]
+            }
+        })
+    }
 
     return (
-        <Pressable onPress={onPress} style={styles.entry}>
+        <Pressable onPress={() => toEntry(id)} style={styles.entry}>
             <View style={styles.imageContainer}>
                 <Image source={image} style={styles.image} />
             </View>

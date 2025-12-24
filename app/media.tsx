@@ -1,5 +1,5 @@
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Image, View, Text, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView, Platform } from "react-native";
 import * as FileSystem from 'expo-file-system';
 import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
@@ -24,15 +24,10 @@ export default function media() {
 
     const imageRef = useRef<View>(null);
 
-    const { media, type, date, time, ms } = useLocalSearchParams(); // params from camera
+    const { type, id, media, date, time, ms, base, meat, sauce, rating, notes } = useLocalSearchParams(); // params from camera
     const router = useRouter();
     const [notesText, setNotesText] = useState('');
-    const [rating, setRating] = useState(0);
-
-    const handleChange = useCallback(
-        (value: number) => setRating(Math.round((rating + value) * 5) / 10),
-        [rating],
-    );
+    const [starRating, setStarRating] = useState(0);
     
     
     const [baseOpen, setBaseOpen] = useState(false);
@@ -40,7 +35,7 @@ export default function media() {
     const [baseItems, setBaseItems] = useState([
         { label: 'chips', value: 'chips' },
         { label: 'rice', value: 'rice' }
-    ]);
+    ]);    
     
     const [meatOpen, setMeatOpen] = useState(false);
     const [meatValue, setMeatValue] = useState<string[]>([]);
@@ -78,14 +73,36 @@ export default function media() {
     }, []);
     
 
-
-    // taken or uploaded photo
     let isUpload;
-    if (type === "photo") {
-        isUpload = false;
-    } else {
-        isUpload = true;
-    }
+    let isView;
+    useEffect(() => {
+
+        if (type === "view") {
+        
+            // viewing as entry page
+    
+            setBaseValue(base.split(","));
+            setMeatValue(meat.split(","));
+            setSauceValue(sauce.split(","));
+    
+            setStarRating(Number(rating));
+    
+            setNotesText(notes);
+
+            isView = true;
+            isUpload = false;
+    
+        } else {
+            // taken or uploaded photo
+            isView = false;
+            if (type === "photo") {
+                isUpload = false;
+            } else {
+                isUpload = true;
+            }
+        }
+    })
+
 
     // pushes the log into storage + goes home
     async function submit() {
@@ -93,6 +110,9 @@ export default function media() {
         console.log("submit pressed")
 
         if (baseValue && meatValue) { // fix this conditional here (if thats even needed)
+            
+            
+            
             const newEntry: Entry = {
                 id: generateUUID(),
                 photo: media,
@@ -102,7 +122,7 @@ export default function media() {
                 base: baseValue,
                 meat: meatValue,
                 sauce: sauceValue,
-                rating: rating,
+                rating: starRating,
                 notes: notesText,
 
             }
@@ -171,6 +191,10 @@ export default function media() {
     function retake() {
         router.push('/cameraPage');
     }
+
+    function deleteEntry() {
+        console.log("delet");
+    }
     
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -187,11 +211,12 @@ export default function media() {
                     conditional if viewing from library or not
                     retake/reupload or delete
                     */}
-                    {isUpload ? (
-                        <IconButton onPress={pickImageAsync} icon="loop" size="small" />
-                    ) : (
-                        <IconButton onPress={retake} icon="loop" size="small" />
-                    )}
+
+                    {type === "view" && <IconButton onPress={deleteEntry} icon="delete" size="small" />}
+                    {type === "photo" && <IconButton onPress={pickImageAsync} icon="add-to-photos" size="small" />}
+                    {type === "" && <IconButton onPress={retake} icon="loop" size="small" />}
+      
+
                 </View>
                 <View style={styles.dropdownWrapper}>
                     <DropDownPicker
@@ -278,8 +303,8 @@ export default function media() {
                 <View style={styles.rating}>
                     <StarRating
                         style={styles.rating}
-                        rating={rating}
-                        onChange={setRating}
+                        rating={starRating}
+                        onChange={setStarRating}
                         color='white'
                         emptyColor='rgba(255,255,255,0.3)'
                         starStyle={{

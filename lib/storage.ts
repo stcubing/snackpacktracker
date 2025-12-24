@@ -31,3 +31,30 @@ export async function clearEntries(): Promise<void> {
     AsyncStorage.setItem("entries", "");
     console.log("successfully cleared entries");
 }
+
+export async function getEntry(id: string) {
+    const entries = await Promise.all(await loadEntries());
+
+    const matching = entries.find(item => item.id == id)
+
+    if (matching) {    
+        console.log("found");
+    
+        const foundEntry: Entry = {
+            id: matching["id"],
+            photo: matching["photo"],
+            date: matching["date"],
+            time: matching["time"],
+            ms: matching["ms"],
+            base: matching["base"],
+            meat: matching["meat"],
+            sauce: matching["sauce"],
+            rating: matching["rating"],
+            notes: matching["notes"],
+
+        }
+        return foundEntry;
+    }
+
+
+}
