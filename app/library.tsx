@@ -54,10 +54,6 @@ export default function library() {
         router.back()
     }
     
-    // const toEntry = () => {
-    //     console.log("pressed");
-    // }
-
     return (
         <View style={styles.background}>
             <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>

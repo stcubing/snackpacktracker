@@ -64,8 +64,11 @@ export async function deleteEntry(id: string) {
     const matching = entries.find(item => item.id == id);
 
     if (matching) {
+        
         const index = entries.indexOf(matching);
-        entries.splice(index);
+        console.log("removing at index", index);
+
+        entries.splice(index, 1);
         await AsyncStorage.setItem("entries", JSON.stringify(entries));
         console.log(entries);
     }

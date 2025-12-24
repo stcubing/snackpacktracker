@@ -184,9 +184,6 @@ export default function media() {
 
     }
 
-    function ratingCompleted(rating) {
-        console.log("Rating is: " + rating)
-    }
 
     function retake() {
         router.push('/cameraPage');
@@ -197,8 +194,34 @@ export default function media() {
         await deleteEntry(id);
         router.back();
     }
-    function update() {
-        console.log("updatye");
+    async function update(id: string) {
+        console.log("updating", id);
+        await deleteEntry(id);
+        
+        const newEntry: Entry = {
+            id: id,
+            photo: media,
+            date: date,
+            time: time,
+            ms: ms,
+            base: baseValue,
+            meat: meatValue,
+            sauce: sauceValue,
+            rating: starRating,
+            notes: notesText,
+
+        }
+
+        // check if entries exist first (append new entry if so)
+        let existing: Entry[] = await loadEntries();
+
+        const newArray: Entry[] = [...existing, newEntry];
+        console.log(newArray);
+
+        saveEntry(newArray);
+
+        router.back();
+
     }
     
     return (
@@ -336,7 +359,7 @@ export default function media() {
                 />
                 <View style={styles.submitbtn}>
                     {type === "view" ? (
-                        <TextButton onPress={update} text="update"/>
+                        <TextButton onPress={() => update(id)} text="update"/>
                     ) : (
                         <TextButton onPress={submit} text="submit"/>
                     )}
