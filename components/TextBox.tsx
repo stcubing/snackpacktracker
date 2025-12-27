@@ -1,23 +1,34 @@
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
 
 
 import { MaterialIcons, FontAwesome, Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { useEffect } from 'react';
+import { SplashScreen } from 'expo-router';
 
 
 type Props = {
     text: string;
-    onPress: () => void;
 };
 
-export default function TextButton({ text, onPress }: Props) {
+export default function TextButton({ text }: Props) {
 
     const [fontsLoaded] = useFonts({ FiraCode_400Regular });
+    useEffect(() => {
+        if (fontsLoaded) {
+        SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded]);
+
+    if (!fontsLoaded) {
+        return null; // Keep splash screen visible
+    }
+    
 
     return (
-        <Pressable style={styles.buttonWrapper} onPress={onPress}>
+        <View style={styles.buttonWrapper}>
             <Text style={styles.buttonText} >{text}</Text>
-        </Pressable>
+        </View>
     );
 }
 
@@ -25,7 +36,7 @@ const styles = StyleSheet.create({
     buttonWrapper: {
         backgroundColor: '#141414', 
         justifyContent: 'center',
-        alignItems: 'center',
+        // alignItems: 'center',
         padding: 15,
 
         borderRadius: 10,
@@ -40,7 +51,7 @@ const styles = StyleSheet.create({
     buttonText: {
         fontFamily: 'FiraCode_400Regular',
         color: 'white',
-        fontSize: 20,
+        fontSize: 35,
         fontWeight: 'bold'
     }
     
