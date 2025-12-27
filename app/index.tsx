@@ -1,15 +1,10 @@
 
-import { useEffect, useRef, useState } from 'react';
-import { Button, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Link, router, SplashScreen } from 'expo-router';
-import * as ImagePicker from 'expo-image-picker';
-import * as MediaLibrary from 'expo-media-library';
-import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
-import AppLoading from 'expo-splash-screen';
+import { FiraCode_400Regular, useFonts } from '@expo-google-fonts/fira-code';
+import { router } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
 
-import { saveEntry, loadEntries, clearEntries } from '@/lib/storage';
-import { pickImageAsync } from '@/utils/imageUpload';
 import IconButton from '@/components/IconButton';
+import { pickImageAsync } from '@/utils/imageUpload';
 
 
 
@@ -22,10 +17,17 @@ export default function index() {
     async function toCamera() {
         router.push({pathname: "/cameraPage"})
     }
+    async function toRandom() {
+        router.push({pathname: "/random"})
+    }
+    async function toStats() {
+        // router.push({pathname: "/stats"})
+        console.log("to stats")
+    }
     async function toLibrary() {
         router.push({pathname: "/library"})
     }
-
+    
 
     return (
         <View style={styles.background}>
@@ -43,8 +45,8 @@ export default function index() {
                 </View>
 
                 <View style={styles.btnRow}>
-                    <IconButton onPress={toCamera}  icon="dice" size="smallRect" />
-                    <IconButton onPress={pickImageAsync} icon="stats-chart" size="smallRect" />
+                    <IconButton onPress={toRandom}  icon="dice" size="smallRect" />
+                    <IconButton onPress={toStats} icon="stats-chart" size="smallRect" />
                 </View>
 
                 <IconButton onPress={toLibrary} icon="photo-library" size="largeRect" />
