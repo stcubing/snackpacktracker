@@ -1,8 +1,10 @@
 import { Camera, CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter } from 'expo-router';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import IconButton from '@/components/IconButton';
+
+import { useIsFocused } from "@react-navigation/native";
 
 export default function CameraPage() {
 
@@ -12,13 +14,14 @@ export default function CameraPage() {
 	const [facing, setFacing] = useState<CameraType>('back');
 	const [permission, requestPermission] = useCameraPermissions();
 
+	const isFocused = useIsFocused();
+
 
 	// cam permissions not loaded yet
 	if (!permission) {
 		return <View />;
 	}
 
-	// Camera permissions are not granted yet.
 	if (!permission.granted) {
 		return (
 		<View style={styles.container}>
@@ -27,6 +30,9 @@ export default function CameraPage() {
 		</View>
 		);
 	}
+
+	
+	
 
 	// go back
 	function back() {
@@ -79,7 +85,9 @@ export default function CameraPage() {
 	return (
 		<View style={styles.container}>
 			<View style={styles.cameraContainer}>
-				<CameraView style={styles.camera} facing={facing} ref={cameraRef} />
+				{isFocused && (
+					<CameraView style={styles.camera} facing={facing} ref={cameraRef} />
+				)}
 			</View>
 
 			<View style={styles.buttonContainer}>

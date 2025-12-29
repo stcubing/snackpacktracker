@@ -5,9 +5,8 @@ import * as FileSystem from 'expo-file-system';
 import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
 import { captureRef } from "react-native-view-shot";
 import * as MediaLibrary from 'expo-media-library';
-import domtoimage from 'dom-to-image';
 import { saveEntry, loadEntries, deleteEntry } from '@/lib/storage';
-import { Entry } from '@/types/Entry';
+import { Entry } from '@/types/entry';
 import { generateUUID } from '@/utils/uuid';
 import { pickImageAsync } from "@/utils/imageUpload";
 import StarRating from 'react-native-star-rating-widget';
@@ -110,9 +109,7 @@ export default function media() {
         console.log("submit pressed")
 
         if (baseValue && meatValue) { // fix this conditional here (if thats even needed)
-            
-            
-            
+                
             const newEntry: Entry = {
                 id: generateUUID(),
                 photo: media,
@@ -127,49 +124,16 @@ export default function media() {
 
             }
 
-            // check if entries exist first (append new entry if so)
             let existing: Entry[] = await loadEntries();
-
-            console.log(newEntry);
-            // existing.push(newEntry);
-            // console.log(existing);
-
             const newArray: Entry[] = [...existing, newEntry];
-            console.log(newArray);
+            // console.log(newArray);
 
             saveEntry(newArray);
 
             // save file
             if (Platform.OS !== 'web') {
-                try {
-                    // to do: take/save higher quality photos
-                    const localUri = await captureRef(imageRef, {
-                        // height: 440,
-                        quality: 1,
-                    });
-
-                    await MediaLibrary.saveToLibraryAsync(localUri);
-
-
-                } catch (e) {
-                    console.log(e);
-                }
-
+                await MediaLibrary.saveToLibraryAsync(media);
             }
-            // else { // web saving (not needed?)
-            //     try {
-            //         const dataUrl = await domtoimage.toJpeg(imageRef.current, {
-            //             quality: 1,
-            //         });
-
-            //         let link = document.createElement('a');
-            //         link.download = 'gurt.jpeg';
-            //         link.href = dataUrl;
-            //         link.click();
-            //     } catch (e) {
-            //         console.log(e);
-            //     }
-            // }
 
             
             router.push({

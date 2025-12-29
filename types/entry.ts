@@ -1,6 +1,6 @@
 export interface Entry {
     id: string;
-    photo: string | string[];
+    photo: string;
     date: string;
     time: string | string[];
     ms: number

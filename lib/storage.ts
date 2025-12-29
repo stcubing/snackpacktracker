@@ -1,5 +1,9 @@
+import { Entry } from '@/types/entry';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Entry } from '@/types/Entry';
+import * as FileSystem from 'expo-file-system/legacy';
+import { File, Paths } from 'expo-file-system';
+import { Platform } from 'react-native';
+
 
 
 export async function saveEntry(value: Entry[]) {
@@ -28,6 +32,7 @@ export async function loadEntries(): Promise<Entry[]> {
 }
 
 export async function clearEntries(): Promise<void> {
+    
     AsyncStorage.setItem("entries", "");
     console.log("successfully cleared entries");
 }
@@ -61,9 +66,17 @@ export async function getEntry(id: string) {
 // delete specific entry based on id
 export async function deleteEntry(id: string) {
     const entries = await Promise.all(await loadEntries());
-    const matching = entries.find(item => item.id == id);
-
+    const matching = entries.find(item => item.id == id); // gets entry with matching id
+    
     if (matching) {
+        const uri: string = matching["photo"];
+
+        if (Platform.OS !== 'web') {
+            console.log("deleting image", uri)
+            await FileSystem.deleteAsync(uri, {idempotent: true});
+        }
+        // const file = new File(Paths.cache, "Internal storage/DCIM/francis.png");
+        // file.delete();
         
         const index = entries.indexOf(matching);
         console.log("removing at index", index);
