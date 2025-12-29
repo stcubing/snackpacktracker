@@ -109,10 +109,18 @@ export default function media() {
         console.log("submit pressed")
 
         if (baseValue && meatValue) { // fix this conditional here (if thats even needed)
-                
+            
+            let newUri = media;
+            // save file
+            if (Platform.OS !== 'web') {
+                // const newUri = await MediaLibrary.saveToLibraryAsync(media);
+                newUri = (await MediaLibrary.createAssetAsync(media)).uri;
+                console.log("new uri", newUri);
+            }
+
             const newEntry: Entry = {
                 id: generateUUID(),
-                photo: media,
+                photo: newUri,
                 date: date,
                 time: time,
                 ms: ms,
@@ -127,19 +135,11 @@ export default function media() {
             let existing: Entry[] = await loadEntries();
             const newArray: Entry[] = [...existing, newEntry];
             // console.log(newArray);
+            
 
             saveEntry(newArray);
-
-            // save file
-            if (Platform.OS !== 'web') {
-                await MediaLibrary.saveToLibraryAsync(media);
-            }
-
-            
-            router.push({
-                pathname: "/",
-                params: {}
-            })
+  
+            router.push("/");
 
 
         } else {

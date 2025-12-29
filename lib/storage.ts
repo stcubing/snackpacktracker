@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
 import { File, Paths } from 'expo-file-system';
 import { Platform } from 'react-native';
+import * as MediaLibrary from 'expo-media-library';
 
 
 
@@ -72,11 +73,24 @@ export async function deleteEntry(id: string) {
         const uri: string = matching["photo"];
 
         if (Platform.OS !== 'web') {
-            console.log("deleting image", uri)
-            await FileSystem.deleteAsync(uri, {idempotent: true});
+            console.log("deleting image", uri);
+
+            // BROKEN DELETING SYSTEM.. doesnt work unless i make a dev build 
+            try {
+                const { status } = await MediaLibrary.requestPermissionsAsync(false, ['photo']);
+    
+                if (status === 'granted') {
+                    console.log("deleting access granted");
+                    const asset = await MediaLibrary.getAssetsAsync(uri);
+                    await MediaLibrary.deleteAssetsAsync([asset])
+                }
+
+            } catch {
+                console.log("error adsfjhdfja")
+            }
+
         }
-        // const file = new File(Paths.cache, "Internal storage/DCIM/francis.png");
-        // file.delete();
+
         
         const index = entries.indexOf(matching);
         console.log("removing at index", index);
