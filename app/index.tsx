@@ -21,7 +21,7 @@ export default function index() {
         router.push({pathname: "/random"})
     }
     async function toStats() {
-        // router.push({pathname: "/stats"})
+        router.push({pathname: "/stats"})
         console.log("to stats")
     }
     async function toLibrary() {
