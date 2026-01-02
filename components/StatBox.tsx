@@ -10,10 +10,11 @@ import { SplashScreen } from 'expo-router';
 type Props = {
     size: string;
     stat: string;
+    perc: number;
     value: number;
 };
 
-export default function StatBox({ size, stat, value }: Props) {
+export default function StatBox({ size, stat, value, perc }: Props) {
 
     const [fontsLoaded] = useFonts({ FiraCode_400Regular, FiraCode_600SemiBold });
     useEffect(() => {
@@ -29,6 +30,7 @@ export default function StatBox({ size, stat, value }: Props) {
     if (size === "large") {
         return (
             <View style={styles.buttonWrapper}>
+                <Text style={styles.largePercText} >{perc}%</Text>
                 <Text style={styles.largeValueText} >{value}</Text>
                 <Text style={styles.largeStatText} >{stat}</Text>
             </View>
@@ -66,10 +68,16 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 15,
     },
+    largePercText: {
+        fontFamily: 'FiraCode_400Regular',
+        color: 'white',
+        fontSize: 15,
+        opacity: 0.5,
+    },
     largeValueText: {
         fontFamily: 'FiraCode_600SemiBold',
         color: 'white',
-        fontSize: 45,
+        fontSize: 55,
     },
     
     smallStatText: {

@@ -21,10 +21,20 @@ export default function stats() {
         bbq: 0, chilli: 0, garlic: 0, mayo: 0,
         hummus: 0, tomato: 0, sweetchilli: 0,
     });
+    const [percStats, setPercStats] = useState({ // percentages?
+        rice: 0, chips: 0,
+
+        chicken: 0, beef: 0, lamb: 0, 
+        
+        bbq: 0, chilli: 0, garlic: 0, mayo: 0,
+        hummus: 0, tomato: 0, sweetchilli: 0,
+    });
     
     const [miscStats, setMiscStats] = useState({
         count: 0
     })
+
+    let total = 0;
 
 
     useFocusEffect(
@@ -34,12 +44,15 @@ export default function stats() {
                 try {
                     let data: Entry[] = await loadEntries();
                     console.log(data);
+                    
+                    setMiscStats({"count": data.length}) // maybe switch to using the function? doesnt seem needed atm
+                    total = data.length;
+
 
                     for (const key in partStats) {
                         updatePartStats(key, getTotalOf(key, data))
                     }
                     
-                    setMiscStats({"count": data.length}) // maybe switch to using the function? doesnt seem needed atm
                     
                     
                 } catch (error) {
@@ -59,6 +72,10 @@ export default function stats() {
             ...prevData,
             [key]: value
         }))
+        setPercStats(prevData => ({
+            ...prevData,
+            [key]: (value*100 / total).toFixed(1)
+        }))
     }
     const updateMiscStats = (key: string, value: any) => {
         setMiscStats(prevData => ({
@@ -70,7 +87,7 @@ export default function stats() {
 
     // gets total number of times item shows up in data
     const getTotalOf = (item: string, data: Entry[]) => {
-        console.log("getting total of", item);
+        // console.log("getting total of", item);
         let count = 0;
         
         for (let entry in data) {
@@ -100,13 +117,13 @@ export default function stats() {
 
                 <View style={styles.statsContainer}>
                     <View style={styles.row}>
-                        <StatBox size="large" stat="chips" value={partStats["chips"]} />
-                        <StatBox size="large" stat="rice" value={partStats["rice"]} />
+                        <StatBox size="large" stat="chips" value={partStats["chips"]} perc={percStats["chips"]} />
+                        <StatBox size="large" stat="rice" value={partStats["rice"]} perc={percStats["rice"]} />
                     </View>
                     <View style={styles.row}>
-                        <StatBox size="large" stat="chicken" value={partStats["chicken"]} />
-                        <StatBox size="large" stat="beef" value={partStats["beef"]} />
-                        <StatBox size="large" stat="lamb" value={partStats["lamb"]} />
+                        <StatBox size="large" stat="chicken" value={partStats["chicken"]} perc={percStats["chicken"]} />
+                        <StatBox size="large" stat="beef" value={partStats["beef"]} perc={percStats["beef"]} />
+                        <StatBox size="large" stat="lamb" value={partStats["lamb"]} perc={percStats["lamb"]} />
                     </View>
 
                     {/* sauces here */}
