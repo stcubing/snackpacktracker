@@ -1,6 +1,6 @@
 import TextButton from "@/components/TextButton";
 import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { FiraCode_400Regular, useFonts } from '@expo-google-fonts/fira-code';
 import { router, useFocusEffect } from 'expo-router';
@@ -8,6 +8,7 @@ import IconButton from "@/components/IconButton";
 import TextBox from "@/components/TextBox";
 import { loadEntries } from "@/lib/storage";
 import { Entry } from "@/types/entry";
+import StatBox from "@/components/StatBox";
 
 
 export default function stats() {
@@ -91,20 +92,27 @@ export default function stats() {
 
     return (
         <View style={styles.background}>
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <View style={styles.top} >
                     <IconButton onPress={back} icon="arrow-back" size="small" />
                     <Text style={styles.heading}>statistics</Text>
                 </View>
 
-                {/* <TextBox text="bleh" /> */}
-                <Text style={styles.text}>total: {miscStats["count"]}</Text>
-                <Text style={styles.text}>rice: {partStats["rice"]}</Text>
-                <Text style={styles.text}>chips: {partStats["chips"]}</Text>
-                <Text style={styles.text}>chicken: {partStats["chicken"]}</Text>
-                <Text style={styles.text}>bbq: {partStats["bbq"]}</Text>
+                <View style={styles.statsContainer}>
+                    <View style={styles.row}>
+                        <StatBox size="large" stat="chips" value={partStats["chips"]} />
+                        <StatBox size="large" stat="rice" value={partStats["rice"]} />
+                    </View>
+                    <View style={styles.row}>
+                        <StatBox size="large" stat="chicken" value={partStats["chicken"]} />
+                        <StatBox size="large" stat="beef" value={partStats["beef"]} />
+                        <StatBox size="large" stat="lamb" value={partStats["lamb"]} />
+                    </View>
 
-            </View>
+                    {/* sauces here */}
+                </View>
+
+            </ScrollView>
         </View>
     )
 }
@@ -120,19 +128,19 @@ const styles = StyleSheet.create({
   
     background: {
         backgroundColor: '#070707',
-        height: '100%',
-
+        height: '100%', 
+        
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        
+        justifyContent: 'center',       
     },
 
     container: {
         // backgroundColor: 'green',
         height: '90%',
         width: '90%',
-        paddingBottom: 50
+        paddingBottom: 50,
+        marginTop: 50,
     },
 
     results: {
@@ -156,15 +164,19 @@ const styles = StyleSheet.create({
         marginVertical: 50,
     },
 
-    button: {
-        marginTop: 'auto',
+    row: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        gap: 10
+     
     },
-    subtext: {
-        fontFamily: 'FiraCode_400Regular',
-        color: '#ffffff',
-        opacity: 0.5,
-        fontSize: 15,
-    },
+
+    statsContainer: {
+        gap: 10
+    }
+
+
 
 
 })

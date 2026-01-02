@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
-import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
+import { useFonts, FiraCode_400Regular, FiraCode_600SemiBold } from '@expo-google-fonts/fira-code';
 
 
 import { MaterialIcons, FontAwesome, Ionicons, FontAwesome5 } from '@expo/vector-icons';
@@ -12,7 +12,7 @@ type Props = {
 
 export default function TextButton({ text, onPress }: Props) {
 
-    const [fontsLoaded] = useFonts({ FiraCode_400Regular });
+    const [fontsLoaded] = useFonts({ FiraCode_400Regular, FiraCode_600SemiBold });
 
     return (
         <Pressable style={styles.buttonWrapper} onPress={onPress}>
@@ -38,10 +38,9 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
     },
     buttonText: {
-        fontFamily: 'FiraCode_400Regular',
+        fontFamily: 'FiraCode_600SemiBold',
         color: 'white',
         fontSize: 20,
-        fontWeight: 'bold'
     }
     
 });

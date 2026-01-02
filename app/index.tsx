@@ -1,5 +1,5 @@
 
-import { FiraCode_400Regular, useFonts } from '@expo-google-fonts/fira-code';
+import { FiraCode_400Regular, FiraCode_600SemiBold, useFonts } from '@expo-google-fonts/fira-code';
 import { router } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -12,7 +12,7 @@ import { pickImageAsync } from '@/utils/imageUpload';
 export default function index() {
 
 
-    const [fontsLoaded] = useFonts({ FiraCode_400Regular });
+    const [fontsLoaded] = useFonts({ FiraCode_400Regular, FiraCode_600SemiBold });
 
     async function toCamera() {
         router.push({pathname: "/cameraPage"})
@@ -64,9 +64,6 @@ const styles = StyleSheet.create({
     background: {
         backgroundColor: '#070707',
         height: '100%',
-        // paddingTop: 150,
-        // paddingLeft: 25,
-        // paddingRight: 25,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -75,14 +72,12 @@ const styles = StyleSheet.create({
         width: '90%',
         display: 'flex',
         alignItems: 'center',
-        // backgroundColor: 'red',
         gap: 10,
     },
 
     headerText: {
         paddingTop: 100,
         paddingBottom: 100,
-        // backgroundColor: 'red',
     },
     heading: {
         fontFamily: 'FiraCode_400Regular',
@@ -113,7 +108,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         gap: 10,
-        // overflow: 'hidden',
     }
 
 

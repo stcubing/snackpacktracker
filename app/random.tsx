@@ -126,7 +126,8 @@ const styles = StyleSheet.create({
         // backgroundColor: 'green',
         height: '90%',
         width: '90%',
-        paddingBottom: 50
+        paddingBottom: 50,
+        marginTop: 25,
     },
 
     results: {

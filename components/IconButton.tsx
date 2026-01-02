@@ -62,11 +62,10 @@ const styles = StyleSheet.create({
 
     square: {
         height: 200,
-        width: '49%',
+        flex: 1,
     },
     smallRect: {
-        width: '49%',
-        // width: 200,
+        flex: 1,
         height: 100,
     },
     largeRect: {

@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text } from 'react-native';
-import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
+import { useFonts, FiraCode_400Regular, FiraCode_600SemiBold } from '@expo-google-fonts/fira-code';
 
 
 import { MaterialIcons, FontAwesome, Ionicons, FontAwesome5 } from '@expo/vector-icons';
@@ -11,9 +11,9 @@ type Props = {
     text: string;
 };
 
-export default function TextButton({ text }: Props) {
+export default function TextBox({ text }: Props) {
 
-    const [fontsLoaded] = useFonts({ FiraCode_400Regular });
+    const [fontsLoaded] = useFonts({ FiraCode_400Regular, FiraCode_600SemiBold });
     useEffect(() => {
         if (fontsLoaded) {
         SplashScreen.hideAsync();
@@ -49,10 +49,9 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
     },
     buttonText: {
-        fontFamily: 'FiraCode_400Regular',
+        fontFamily: 'FiraCode_600SemiBold',
         color: 'white',
         fontSize: 35,
-        fontWeight: 'bold'
     }
     
 });
