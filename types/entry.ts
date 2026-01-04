@@ -3,7 +3,8 @@ export interface Entry {
     photo: string;
     date: string;
     time: string | string[];
-    ms: number
+    ms: number;
+    location: string;
     base: string[];
     meat: string[];
     sauce: string[];

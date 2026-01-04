@@ -2,9 +2,10 @@ import { Camera, CameraType, CameraView, useCameraPermissions } from 'expo-camer
 import { useRouter } from 'expo-router';
 import { useState, useRef, useEffect } from 'react';
 import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import IconButton from '@/components/IconButton';
-
+import * as Location from 'expo-location';
 import { useIsFocused } from "@react-navigation/native";
+
+import IconButton from '@/components/IconButton';
 
 export default function CameraPage() {
 
@@ -14,8 +15,44 @@ export default function CameraPage() {
 	const [facing, setFacing] = useState<CameraType>('back');
 	const [permission, requestPermission] = useCameraPermissions();
 
+	const [locationValue, setLocationValue] = useState('');
+
 	const isFocused = useIsFocused();
 
+	useEffect(() => {
+		async function getLocation() {
+            const { status } = await Location.requestForegroundPermissionsAsync();
+    		if (status !== "granted") return;
+      
+
+            let coords = await Location.getCurrentPositionAsync({});
+            const latitude = coords["coords"]["latitude"];
+            const longitude = coords["coords"]["longitude"];
+            
+            let location = await Location.reverseGeocodeAsync({latitude, longitude});
+            
+			let formattedAddress: string;
+            if (location.length > 0) {
+                const address = location[0];
+                formattedAddress = address["street"] + ", " + address["city"] + ", " + address["country"]
+                console.log(formattedAddress);
+				
+            } else {
+				formattedAddress = "unknown location"
+			};
+			setLocationValue(formattedAddress);
+
+			console.log("location getting finished");
+
+			router.setParams({
+				location: formattedAddress,
+			});
+
+        }
+        console.log("getting location");
+        getLocation();
+
+	}, [location]);
 
 	// cam permissions not loaded yet
 	if (!permission) {
@@ -31,12 +68,9 @@ export default function CameraPage() {
 		);
 	}
 
-	
-	
-
 	// go back
 	function back() {
-		router.back()
+		router.back();
 	}
 
 	// flip camera
@@ -70,17 +104,19 @@ export default function CameraPage() {
 			const date = `${day}/${month}/${year}`;
 			const time = `${hours}:${minutes}:${seconds}`;
 
-			console.log(`current date: ${date}`);
-			console.log(`current time: ${time}`);
+			console.log("date:", date);
+			console.log("time:", time);
+			console.log("location:", locationValue);
 
 			// pass result
 			router.push({
 				pathname: "/media",
-				params: {media: photo.uri, type: "photo", date: date, time: time, ms: ms}
+				params: {media: photo.uri, type: "photo", date: date, time: time, ms: ms, location: locationValue}
 			})
 		}
 
 	}
+	
 
 	return (
 		<View style={styles.container}>

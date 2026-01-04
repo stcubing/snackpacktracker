@@ -29,6 +29,7 @@ export default function EntryButton({ id, image, date }) {
                 date: entry["date"],
                 time: entry["time"],
                 ms: entry["ms"],
+                location: entry["location"],
                 base: entry["base"],
                 meat: entry["meat"],
                 sauce: entry["sauce"],

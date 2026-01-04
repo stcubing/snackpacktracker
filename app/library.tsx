@@ -6,7 +6,7 @@ import { Image } from 'expo-image';
 
 import { saveEntry, loadEntries, clearEntries } from '@/lib/storage';
 import { pickImageAsync } from '@/utils/imageUpload';
-import { Entry } from '@/types/Entry';
+import { Entry } from '@/types/entry';
 import IconButton from '@/components/IconButton';
 import TextButton from '@/components/TextButton';
 import EntryButton from '@/components/EntryButton';

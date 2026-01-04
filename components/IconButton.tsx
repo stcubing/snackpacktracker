@@ -68,10 +68,6 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 100,
     },
-    largeRect: {
-        width: '100%',
-        height: 100,
-    },
     small: {
         padding: 15,
         backgroundColor: 'rgba(0,0,0,0.5)',

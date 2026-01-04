@@ -1,4 +1,4 @@
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { Link, useGlobalSearchParams, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Image, View, Text, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView, Platform } from "react-native";
 import * as FileSystem from 'expo-file-system';
@@ -9,8 +9,8 @@ import { saveEntry, loadEntries, deleteEntry } from '@/lib/storage';
 import { Entry } from '@/types/entry';
 import { generateUUID } from '@/utils/uuid';
 import { pickImageAsync } from "@/utils/imageUpload";
+
 import StarRating from 'react-native-star-rating-widget';
-import Button from '@/components/Button';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import IconButton from "@/components/IconButton";
@@ -23,10 +23,11 @@ export default function media() {
 
     const imageRef = useRef<View>(null);
 
-    const { type, id, media, date, time, ms, base, meat, sauce, rating, notes } = useLocalSearchParams(); // params from camera
+    const { type, id, media, date, time, ms, location, base, meat, sauce, rating, notes } = useGlobalSearchParams(); // params from camera
     const router = useRouter();
     const [notesText, setNotesText] = useState('');
     const [starRating, setStarRating] = useState(0);
+    const [locationValue, setLocationValue] = useState('loading location...');
     
     
     const [baseOpen, setBaseOpen] = useState(false);
@@ -85,6 +86,8 @@ export default function media() {
             setSauceValue(sauce.split(","));
     
             setStarRating(Number(rating));
+
+            setLocationValue(locationValue);
     
             setNotesText(notes);
 
@@ -100,7 +103,15 @@ export default function media() {
                 isUpload = true;
             }
         }
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        console.log("locagtion is this:", location);
+        if (location) {
+            console.log("setting location")
+            setLocationValue(location);
+        }
+    }, [location])
 
 
     // pushes the log into storage + goes home
@@ -124,6 +135,7 @@ export default function media() {
                 date: date,
                 time: time,
                 ms: ms,
+                location: locationValue,
                 base: baseValue,
                 meat: meatValue,
                 sauce: sauceValue,
@@ -168,6 +180,7 @@ export default function media() {
             date: date,
             time: time,
             ms: ms,
+            location: locationValue,
             base: baseValue,
             meat: meatValue,
             sauce: sauceValue,
@@ -193,9 +206,12 @@ export default function media() {
             <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
                 <View style={styles.imageContainer} >
                     <Image ref={imageRef} source={{ uri: media }} style={styles.image} />
-                    <View style={styles.dateTimeWrapper} >
-                        <Text style={styles.dateTimeText}>{time}</Text>
-                        <Text style={styles.dateTimeText}>{date}</Text>
+                    <View style={styles.metadataWrapper} >
+                        <View style={styles.datetimeWrapper}>
+                            <Text style={styles.metadataText}>{time}</Text>
+                            <Text style={styles.metadataText}>{date}</Text>
+                        </View>
+                        <Text style={styles.metadataText}>{locationValue}</Text>
                     </View>
                 </View>
                 <View style={styles.cornerbtn}>
@@ -347,17 +363,15 @@ const styles = StyleSheet.create({
 
     },
     
-    dateTimeWrapper: {
+    metadataWrapper: {
         position: 'absolute',
         // backgroundColor: 'red',
         width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        
         padding: 20,
         bottom: 0
     },
-    dateTimeText: {
+    metadataText: {
         fontFamily: 'FiraCode_400Regular',
         color: 'white',
         fontSize: 15,
@@ -365,6 +379,11 @@ const styles = StyleSheet.create({
         textShadowColor: 'black',
         textShadowOffset: { width: 0, height: 2 },
         textShadowRadius: 5,
+    },
+    datetimeWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
 
     imageContainer: {

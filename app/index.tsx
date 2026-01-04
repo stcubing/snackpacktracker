@@ -48,11 +48,11 @@ export default function index() {
                     <IconButton onPress={toRandom}  icon="dice" size="smallRect" />
                     <IconButton onPress={toStats} icon="stats-chart" size="smallRect" />
                 </View>
-
-                <IconButton onPress={toLibrary} icon="photo-library" size="largeRect" />
-
                 
-                {/* <Text style={styles.heading}>{loadEntries}</Text> */}
+                <View style={styles.btnRow}>
+                    <IconButton onPress={toLibrary} icon="photo-library" size="smallRect" />
+                </View>
+
             </View>
         </View>
     )

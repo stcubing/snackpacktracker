@@ -53,6 +53,7 @@ export async function getEntry(id: string) {
             date: matching["date"],
             time: matching["time"],
             ms: matching["ms"],
+            location: matching["location"],
             base: matching["base"],
             meat: matching["meat"],
             sauce: matching["sauce"],
