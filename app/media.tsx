@@ -106,7 +106,7 @@ export default function media() {
     }, []);
 
     useEffect(() => {
-        console.log("locagtion is this:", location);
+        // console.log("locagtion is this:", location);
         if (location) {
             console.log("setting location")
             setLocationValue(location);
