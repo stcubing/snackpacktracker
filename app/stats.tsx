@@ -43,7 +43,7 @@ export default function stats() {
             const fetchData = async () => {
                 try {
                     let data: Entry[] = await loadEntries();
-                    console.log(data);
+                    // console.log(data);3
                     
                     setMiscStats({"count": data.length}) // maybe switch to using the function? doesnt seem needed atm
                     total = data.length;

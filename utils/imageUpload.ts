@@ -1,21 +1,33 @@
 import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
+import exifr from 'exifr';
+
+
 
 import { router } from 'expo-router';
 
 
 export const pickImageAsync = async () => {
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'],
-        allowsEditing: true,
-        quality: 1,
+    // let result = await ImagePicker.launchImageLibraryAsync({
+    //     mediaTypes: ['images'],
+    //     allowsEditing: false,
+    //     quality: 1,
+    //     exif: true,
+    // });
+
+    // documentpicker gives me lastmod on android :v
+    const result = await DocumentPicker.getDocumentAsync({
+        multiple: false,
+        type: 'image/*',
+        copyToCacheDirectory: true,
     });
 
     if (!result.canceled) {
         const uri = result.assets[0].uri;
-        const lastMod = result.assets[0].file?.lastModified;
-
-        console.log(lastMod);
+        const lastMod = result.assets[0].lastModified;
 
         let rawDate = new Date();
 
@@ -57,7 +69,7 @@ export const pickImageAsync = async () => {
 
         router.push({
             pathname: "/media",
-            params: { media: uri, type: "upload", date: date, time: time, ms: lastMod }
+            params: { media: uri, type: "upload", date: date, time: time, ms: lastMod, location: "unknown location" }
         })
 
     } else {
