@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         // width: '100%',
         // backgroundColor: 'red',
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         flexDirection: 'row',
         flexWrap: 'wrap',
         // flex

@@ -31,10 +31,10 @@ export default function stats() {
     });
     
     const [miscStats, setMiscStats] = useState({
-        count: 0
+        count: 0, avgRating: 0,
     })
 
-    let total = 0;
+    let count = 0;
 
 
     useFocusEffect(
@@ -43,14 +43,24 @@ export default function stats() {
             const fetchData = async () => {
                 try {
                     let data: Entry[] = await loadEntries();
-                    // console.log(data);3
-                    
-                    setMiscStats({"count": data.length}) // maybe switch to using the function? doesnt seem needed atm
-                    total = data.length;
 
+                    count = data.length; // used for averaging, %s, etc
 
+                    // get total of star ratings to average later
+                    let totalRating = 0;
+                    for (const entry in data) {
+                        totalRating += data[entry]["rating"];
+                    }
+
+                    // maybe switch to using the function? doesnt seem needed atm
+                    setMiscStats({
+                        "count": count,
+                        "avgRating": Number((totalRating / count).toPrecision(3)),
+                    }) 
+
+                    // loop thru each ingredient and populate each statistic
                     for (const key in partStats) {
-                        updatePartStats(key, getTotalOf(key, data))
+                        updateStats(key, getTotalOf(key, data));
                     }
                     
                     
@@ -67,14 +77,14 @@ export default function stats() {
         }, [])
     );        
 
-    const updatePartStats = (key: string, value: any) => {
+    const updateStats = (key: string, value: any) => {
         setPartStats(prevData => ({
             ...prevData,
             [key]: value
         }))
         setPercStats(prevData => ({
             ...prevData,
-            [key]: (value*100 / total).toFixed(1)
+            [key]: (value*100 / count).toFixed(1)
         }))
     }
     const updateMiscStats = (key: string, value: any) => {
@@ -129,6 +139,9 @@ export default function stats() {
                     {/* sauces here */}
                 </View>
 
+                <Text style={styles.text}>count: {miscStats["count"]}</Text>
+                <Text style={styles.text}>avgRating: {miscStats["avgRating"]}</Text>
+
             </ScrollView>
         </View>
     )
@@ -169,7 +182,7 @@ const styles = StyleSheet.create({
 
     text: {
         color: 'white',
-        fontSize: 40
+        fontSize: 25
     },
 
 
