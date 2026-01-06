@@ -9,10 +9,12 @@ import { SplashScreen } from 'expo-router';
 
 type Props = {
     size: string;
+
     stat: string;
-    perc: number;
     value: number;
-    width: any;
+
+    perc?: number;
+    width?: any;
 };
 
 export default function StatBox({ size, stat, value, perc, width }: Props) {
@@ -30,7 +32,7 @@ export default function StatBox({ size, stat, value, perc, width }: Props) {
     
     if (size === "large") {
         return (
-            <View style={[styles.buttonWrapper, {flexGrow: width*100}]}>
+            <View style={[styles.statWrapper, styles.largeWrapper, {flexGrow: width*100}]}>
                 <Text style={styles.largePercText} >{perc}%</Text>
                 <Text style={styles.largeValueText} >{value}</Text>
                 <Text style={styles.largeStatText} >{stat}</Text>
@@ -38,9 +40,9 @@ export default function StatBox({ size, stat, value, perc, width }: Props) {
         );
     } else if (size === "small") {
         return (
-            <View style={styles.buttonWrapper}>
-                <Text style={styles.smallValueText} >{value}</Text>
+            <View style={[styles.statWrapper, styles.smallWrapper]}>
                 <Text style={styles.smallStatText} >{stat}</Text>
+                <Text style={styles.smallValueText} >{value}</Text>
             </View>
         );
     }
@@ -48,7 +50,7 @@ export default function StatBox({ size, stat, value, perc, width }: Props) {
 }
 
 const styles = StyleSheet.create({
-    buttonWrapper: {
+    statWrapper: {
         // flex: 1,
         flexBasis: 100,
         backgroundColor: '#141414', 
@@ -65,6 +67,17 @@ const styles = StyleSheet.create({
         shadowOffset: {width: 0, height: 4},
         shadowRadius: 10,
     },
+
+    // largeWrapper: {
+
+    // },
+    smallWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+
+
     largeStatText: {
         fontFamily: 'FiraCode_400Regular',
         color: 'white',
@@ -85,12 +98,12 @@ const styles = StyleSheet.create({
     smallStatText: {
         fontFamily: 'FiraCode_400Regular',
         color: 'white',
-        fontSize: 15,
+        fontSize: 20,
     },
     smallValueText: {
         fontFamily: 'FiraCode_600SemiBold',
         color: 'white',
-        fontSize: 25,
+        fontSize: 20,
     },
     
 });

@@ -32,7 +32,12 @@ export default function stats() {
     
     const [miscStats, setMiscStats] = useState({
         count: 0, avgRating: 0,
-    })
+    });
+
+    
+    const sauces = [];
+
+
 
     let count = 0;
 
@@ -94,6 +99,15 @@ export default function stats() {
         }))
     }
 
+    // map sauces to array of objects
+    sauces.push({sauceName: "bbq", sauceValue: partStats["bbq"], saucePerc: percStats["bbq"]});
+    sauces.push({sauceName: "chilli", sauceValue: partStats["chilli"], saucePerc: percStats["chilli"]});
+    sauces.push({sauceName: "garlic", sauceValue: partStats["garlic"], saucePerc: percStats["garlic"]});
+    sauces.push({sauceName: "mayo", sauceValue: partStats["mayo"], saucePerc: percStats["mayo"]});
+    sauces.push({sauceName: "hummus", sauceValue: partStats["hummus"], saucePerc: percStats["hummus"]});
+    sauces.push({sauceName: "tomato", sauceValue: partStats["tomato"], saucePerc: percStats["tomato"]});
+    sauces.push({sauceName: "sweet chilli", sauceValue: partStats["sweetchilli"], saucePerc: percStats["sweetchilli"]});
+
 
     // gets total number of times item shows up in data
     const getTotalOf = (item: string, data: Entry[]) => {
@@ -126,6 +140,7 @@ export default function stats() {
                 </View>
 
                 <View style={styles.statsContainer}>
+                    <StatBox size="small" stat="total snackpacks logged" value={miscStats["count"]} />
                     <View style={styles.row}>
                         <StatBox size="large" stat="chips" value={partStats["chips"]} perc={percStats["chips"]} width={percStats["chips"]} />
                         <StatBox size="large" stat="rice" value={partStats["rice"]} perc={percStats["rice"]} width={percStats["rice"]} />
@@ -136,10 +151,24 @@ export default function stats() {
                         <StatBox size="large" stat="lamb" value={partStats["lamb"]} perc={percStats["lamb"]} width={percStats["lamb"]} />
                     </View>
 
-                    {/* sauces here */}
+                    {/* oh my god brah */}
+                    <View style={styles.sauces}>
+
+                        { sauces.map((sauce) => (
+                            <View style={styles.sauceRow} key={sauce.sauceName}>
+                                <Text style={styles.sauceStatText}>{sauce.sauceName}</Text>
+                                <View style={styles.sauceStats}>
+                                    <Text style={styles.saucePercText}>{sauce.saucePerc}%</Text>
+                                    <Text style={styles.sauceValueText}>{sauce.sauceValue}</Text>
+                                </View>
+                            </View>
+                        ))}
+                        
+                        
+                    </View>
+
                 </View>
 
-                <Text style={styles.text}>count: {miscStats["count"]}</Text>
                 <Text style={styles.text}>avgRating: {miscStats["avgRating"]}</Text>
 
             </ScrollView>
@@ -204,8 +233,54 @@ const styles = StyleSheet.create({
 
     statsContainer: {
         gap: 10
-    }
+    },
 
+    sauces: {
+        flexBasis: 100,
+        backgroundColor: '#141414', 
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 15,
+        
+
+        borderRadius: 10,
+        borderColor: 'rgba(255,255,255,0.3)',
+        borderWidth: 2,
+
+        shadowColor: '#000',
+        shadowOpacity: .5,
+        shadowOffset: {width: 0, height: 4},
+        shadowRadius: 10,
+    },
+    sauceRow: {
+        margin: -2,
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    sauceStats: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 50,
+    },
+    sauceStatText: {
+        fontFamily: 'FiraCode_400Regular',
+        color: 'white',
+        fontSize: 20,
+    },
+    saucePercText: {
+        fontFamily: 'FiraCode_400Regular',
+        color: 'white',
+        opacity: 0.5,
+        fontSize: 15,
+    },
+    sauceValueText: {
+        fontFamily: 'FiraCode_600SemiBold',
+        color: 'white',
+        fontSize: 20,
+    },
 
 
 
