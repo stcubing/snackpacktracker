@@ -211,7 +211,14 @@ export default function media() {
                             <Text style={styles.metadataText}>{time}</Text>
                             <Text style={styles.metadataText}>{date}</Text>
                         </View>
-                        <Text style={styles.metadataText}>{locationValue}</Text>
+                        {/* <Text style={styles.metadataText}>{locationValue}</Text> */}
+                        <TextInput
+                            style={styles.locationField}
+                            onChangeText={setLocationValue}
+                            value={locationValue}
+                            multiline={true}   
+                            autoCorrect={false}
+                        />
                     </View>
                 </View>
                 <View style={styles.cornerbtn}>
@@ -375,6 +382,24 @@ const styles = StyleSheet.create({
         fontFamily: 'FiraCode_400Regular',
         color: 'white',
         fontSize: 15,
+
+        textShadowColor: 'black',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 5,
+    },
+    locationField: {
+        fontFamily: 'FiraCode_400Regular',
+        color: 'white',
+        fontSize: 15,
+
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        marginTop: 5,
+
+        borderColor: 'rgba(255,255,255,0.3)',
+        // borderWidth: 2,
+        borderRadius: 4,
+        backgroundColor: 'rgba(0,0,0,0.3)',
 
         textShadowColor: 'black',
         textShadowOffset: { width: 0, height: 2 },
