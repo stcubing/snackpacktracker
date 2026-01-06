@@ -12,9 +12,10 @@ type Props = {
     stat: string;
     perc: number;
     value: number;
+    width: any;
 };
 
-export default function StatBox({ size, stat, value, perc }: Props) {
+export default function StatBox({ size, stat, value, perc, width }: Props) {
 
     const [fontsLoaded] = useFonts({ FiraCode_400Regular, FiraCode_600SemiBold });
     useEffect(() => {
@@ -29,7 +30,7 @@ export default function StatBox({ size, stat, value, perc }: Props) {
     
     if (size === "large") {
         return (
-            <View style={styles.buttonWrapper}>
+            <View style={[styles.buttonWrapper, {flexGrow: width*100}]}>
                 <Text style={styles.largePercText} >{perc}%</Text>
                 <Text style={styles.largeValueText} >{value}</Text>
                 <Text style={styles.largeStatText} >{stat}</Text>
@@ -48,7 +49,8 @@ export default function StatBox({ size, stat, value, perc }: Props) {
 
 const styles = StyleSheet.create({
     buttonWrapper: {
-        flex: 1,
+        // flex: 1,
+        flexBasis: 100,
         backgroundColor: '#141414', 
         justifyContent: 'center',
         alignItems: 'center',

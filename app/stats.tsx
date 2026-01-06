@@ -127,13 +127,13 @@ export default function stats() {
 
                 <View style={styles.statsContainer}>
                     <View style={styles.row}>
-                        <StatBox size="large" stat="chips" value={partStats["chips"]} perc={percStats["chips"]} />
-                        <StatBox size="large" stat="rice" value={partStats["rice"]} perc={percStats["rice"]} />
+                        <StatBox size="large" stat="chips" value={partStats["chips"]} perc={percStats["chips"]} width={percStats["chips"]} />
+                        <StatBox size="large" stat="rice" value={partStats["rice"]} perc={percStats["rice"]} width={percStats["rice"]} />
                     </View>
                     <View style={styles.row}>
-                        <StatBox size="large" stat="chicken" value={partStats["chicken"]} perc={percStats["chicken"]} />
-                        <StatBox size="large" stat="beef" value={partStats["beef"]} perc={percStats["beef"]} />
-                        <StatBox size="large" stat="lamb" value={partStats["lamb"]} perc={percStats["lamb"]} />
+                        <StatBox size="large" stat="chicken" value={partStats["chicken"]} perc={percStats["chicken"]} width={percStats["chicken"]} />
+                        <StatBox size="large" stat="beef" value={partStats["beef"]} perc={percStats["beef"]} width={percStats["beef"]} />
+                        <StatBox size="large" stat="lamb" value={partStats["lamb"]} perc={percStats["lamb"]} width={percStats["lamb"]} />
                     </View>
 
                     {/* sauces here */}
