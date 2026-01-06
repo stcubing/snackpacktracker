@@ -9,6 +9,7 @@ import TextBox from "@/components/TextBox";
 import { loadEntries } from "@/lib/storage";
 import { Entry } from "@/types/entry";
 import StatBox from "@/components/StatBox";
+import StarRatingDisplay from "react-native-star-rating-widget";
 
 
 export default function stats() {
@@ -99,7 +100,7 @@ export default function stats() {
         }))
     }
 
-    // map sauces to array of objects
+    // map sauces to array of objects to be mapped later
     sauces.push({sauceName: "bbq", sauceValue: partStats["bbq"], saucePerc: percStats["bbq"]});
     sauces.push({sauceName: "chilli", sauceValue: partStats["chilli"], saucePerc: percStats["chilli"]});
     sauces.push({sauceName: "garlic", sauceValue: partStats["garlic"], saucePerc: percStats["garlic"]});
@@ -131,16 +132,22 @@ export default function stats() {
         router.back()
     }
 
+    function bleh() {
+       
+    }
+
     return (
         <View style={styles.background}>
-            <ScrollView style={styles.container}>
+            <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
                 <View style={styles.top} >
                     <IconButton onPress={back} icon="arrow-back" size="small" />
                     <Text style={styles.heading}>statistics</Text>
                 </View>
 
                 <View style={styles.statsContainer}>
+
                     <StatBox size="small" stat="total snackpacks logged" value={miscStats["count"]} />
+
                     <View style={styles.row}>
                         <StatBox size="large" stat="chips" value={partStats["chips"]} perc={percStats["chips"]} width={percStats["chips"]} />
                         <StatBox size="large" stat="rice" value={partStats["rice"]} perc={percStats["rice"]} width={percStats["rice"]} />
@@ -151,7 +158,6 @@ export default function stats() {
                         <StatBox size="large" stat="lamb" value={partStats["lamb"]} perc={percStats["lamb"]} width={percStats["lamb"]} />
                     </View>
 
-                    {/* oh my god brah */}
                     <View style={styles.sauces}>
 
                         { sauces.map((sauce) => (
@@ -164,12 +170,26 @@ export default function stats() {
                             </View>
                         ))}
                         
-                        
                     </View>
 
-                </View>
+                     <View style={styles.rating}>
+                        <StarRatingDisplay
+                            style={styles.rating}
+                            rating={miscStats["avgRating"]}
+                            onChange={bleh}
+                            color='white'
+                            starSize={50}
+                            step="quarter"
+                            enableSwiping={false}
+                            emptyColor='rgba(255,255,255,0.3)'
+                            starStyle={{
+                                margin: -2,
+                            }}
+                        />
+                    </View>
+                    <StatBox size="small" stat="average rating" value={miscStats["avgRating"]} />
 
-                <Text style={styles.text}>avgRating: {miscStats["avgRating"]}</Text>
+                </View>
 
             </ScrollView>
         </View>
@@ -191,14 +211,14 @@ const styles = StyleSheet.create({
         
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',       
+        justifyContent: 'center',  
     },
 
     container: {
         // backgroundColor: 'green',
+        paddingTop: -50,
         height: '90%',
         width: '90%',
-        paddingBottom: 50,
         marginTop: 50,
     },
 
@@ -232,7 +252,8 @@ const styles = StyleSheet.create({
     },
 
     statsContainer: {
-        gap: 10
+        gap: 10,
+        marginBottom: 80,
     },
 
     sauces: {
@@ -280,6 +301,14 @@ const styles = StyleSheet.create({
         fontFamily: 'FiraCode_600SemiBold',
         color: 'white',
         fontSize: 20,
+    },
+
+
+    rating: {
+        display: 'flex',
+        justifyContent: 'center',
+        margin: 'auto',
+        paddingVertical: 10,
     },
 
 

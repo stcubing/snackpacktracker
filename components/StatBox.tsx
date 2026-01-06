@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
         fontFamily: 'FiraCode_600SemiBold',
         color: 'white',
         fontSize: 55,
+        margin: -10,
     },
     
     smallStatText: {
