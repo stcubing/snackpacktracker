@@ -4,11 +4,6 @@ import { router } from 'expo-router';
 import { getEntry } from '@/lib/storage';
 
 
-// type Props = {
-//     image: string | string[]
-//     date: string
-//     onPress: () => any;
-// };
 
 export default function EntryButton({ id, image, date }) {
 

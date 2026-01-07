@@ -1,11 +1,8 @@
-import TextButton from "@/components/TextButton";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { FiraCode_400Regular, useFonts } from '@expo-google-fonts/fira-code';
 import { router, useFocusEffect } from 'expo-router';
 import IconButton from "@/components/IconButton";
-import TextBox from "@/components/TextBox";
 import { loadEntries } from "@/lib/storage";
 import { Entry } from "@/types/entry";
 import StatBox from "@/components/StatBox";
@@ -22,7 +19,7 @@ export default function stats() {
         bbq: 0, chilli: 0, garlic: 0, mayo: 0,
         hummus: 0, tomato: 0, sweetchilli: 0,
     });
-    const [percStats, setPercStats] = useState({ // percentages?
+    const [percStats, setPercStats] = useState({
         rice: 0, chips: 0,
 
         chicken: 0, beef: 0, lamb: 0, 
@@ -36,12 +33,9 @@ export default function stats() {
     });
 
     
-    const sauces = [];
-
-
+    const sauces = []; // for later mapping
 
     let count = 0;
-
 
     useFocusEffect(
         useCallback(() => {
@@ -54,14 +48,20 @@ export default function stats() {
 
                     // get total of star ratings to average later
                     let totalRating = 0;
+                    let avgRating = 0;
                     for (const entry in data) {
                         totalRating += data[entry]["rating"];
+                    }
+                    if (totalRating !== 0) {
+                        avgRating = Math.round(totalRating / count*100) / 100
+                    } else {
+                        avgRating = 0;
                     }
 
                     // maybe switch to using the function? doesnt seem needed atm
                     setMiscStats({
                         "count": count,
-                        "avgRating": Number((totalRating / count).toPrecision(3)),
+                        "avgRating": avgRating,
                     }) 
 
                     // loop thru each ingredient and populate each statistic
@@ -88,10 +88,17 @@ export default function stats() {
             ...prevData,
             [key]: value
         }))
-        setPercStats(prevData => ({
-            ...prevData,
-            [key]: (value*100 / count).toFixed(1)
-        }))
+        if (value !== 0) {
+            setPercStats(prevData => ({
+                ...prevData,
+                [key]: Math.round(value*100 / count*10) / 10
+            }))
+        } else {
+            setPercStats(prevData => ({
+                ...prevData,
+                [key]: 0
+            }))
+        }
     }
     const updateMiscStats = (key: string, value: any) => {
         setMiscStats(prevData => ({

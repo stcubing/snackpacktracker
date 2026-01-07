@@ -32,7 +32,7 @@ export default function StatBox({ size, stat, value, perc, width }: Props) {
     
     if (size === "large") {
         return (
-            <View style={[styles.statWrapper, styles.largeWrapper, {flexGrow: width*100}]}>
+            <View style={[styles.statWrapper, {flexGrow: (width*100)+1}]}>
                 <Text style={styles.largePercText} >{perc}%</Text>
                 <Text style={styles.largeValueText} >{value}</Text>
                 <Text style={styles.largeStatText} >{stat}</Text>

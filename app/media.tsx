@@ -1,9 +1,7 @@
-import { Link, useGlobalSearchParams, useLocalSearchParams, useRouter } from "expo-router";
+import { useGlobalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Image, View, Text, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView, Platform } from "react-native";
-import * as FileSystem from 'expo-file-system';
+import { Image, View, Text, StyleSheet, ScrollView, TextInput, KeyboardAvoidingView, Platform } from "react-native";
 import { useFonts, FiraCode_400Regular } from '@expo-google-fonts/fira-code';
-import { captureRef } from "react-native-view-shot";
 import * as MediaLibrary from 'expo-media-library';
 import { saveEntry, loadEntries, deleteEntry } from '@/lib/storage';
 import { Entry } from '@/types/entry';
@@ -81,15 +79,15 @@ export default function media() {
         
             // viewing as entry page
     
-            setBaseValue(base.split(","));
-            setMeatValue(meat.split(","));
-            setSauceValue(sauce.split(","));
+            setBaseValue((base.toString()).split(","));
+            setMeatValue((meat.toString()).split(","));
+            setSauceValue((sauce.toString()).split(","));
     
             setStarRating(Number(rating));
 
-            setLocationValue(locationValue);
+            setLocationValue(location.toString());
     
-            setNotesText(notes);
+            setNotesText(notes.toString());
 
             isView = true;
             isUpload = false;
@@ -106,10 +104,10 @@ export default function media() {
     }, []);
 
     useEffect(() => {
-        // console.log("locagtion is this:", location);
+        console.log("locagtion is this:", location);
         if (location) {
             console.log("setting location")
-            setLocationValue(location);
+            setLocationValue(location.toString());
         }
     }, [location])
 
@@ -119,44 +117,42 @@ export default function media() {
 
         console.log("submit pressed")
 
-        if (baseValue && meatValue) { // fix this conditional here (if thats even needed)
             
-            let newUri = media;
-            // save file
-            if (Platform.OS !== 'web') {
-                // const newUri = await MediaLibrary.saveToLibraryAsync(media);
-                newUri = (await MediaLibrary.createAssetAsync(media)).uri;
-                console.log("new uri", newUri);
-            }
-
-            const newEntry: Entry = {
-                id: generateUUID(),
-                photo: newUri,
-                date: date,
-                time: time,
-                ms: ms,
-                location: locationValue,
-                base: baseValue,
-                meat: meatValue,
-                sauce: sauceValue,
-                rating: starRating,
-                notes: notesText,
-
-            }
-
-            let existing: Entry[] = await loadEntries();
-            const newArray: Entry[] = [...existing, newEntry];
-            // console.log(newArray);
-            
-
-            saveEntry(newArray);
-  
-            router.push("/");
-
-
-        } else {
-            console.log("missing hsp components!!");
+        let newUri = media;
+        // save file
+        if (Platform.OS !== 'web') {
+            // const newUri = await MediaLibrary.saveToLibraryAsync(media);
+            newUri = (await MediaLibrary.createAssetAsync(media)).uri;
+            console.log("new uri", newUri);
         }
+
+        if (locationValue == "loading location...") {
+            setLocationValue("unknown location");
+        }
+
+        const newEntry: Entry = {
+            id: generateUUID(),
+            photo: newUri,
+            date: date,
+            time: time,
+            ms: ms,
+            location: locationValue,
+            base: baseValue,
+            meat: meatValue,
+            sauce: sauceValue,
+            rating: starRating,
+            notes: notesText,
+
+        }
+
+        let existing: Entry[] = await loadEntries();
+        const newArray: Entry[] = [...existing, newEntry];
+        // console.log(newArray);
+        
+
+        saveEntry(newArray);
+
+        router.push("/");
 
     }
 
@@ -203,7 +199,8 @@ export default function media() {
     
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
-            <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
+            
+            <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
                 <View style={styles.imageContainer} >
                     <Image ref={imageRef} source={{ uri: media }} style={styles.image} />
                     <View style={styles.metadataWrapper} >
@@ -211,7 +208,6 @@ export default function media() {
                             <Text style={styles.metadataText}>{time}</Text>
                             <Text style={styles.metadataText}>{date}</Text>
                         </View>
-                        {/* <Text style={styles.metadataText}>{locationValue}</Text> */}
                         <TextInput
                             style={styles.locationField}
                             onChangeText={setLocationValue}
@@ -222,17 +218,13 @@ export default function media() {
                     </View>
                 </View>
                 <View style={styles.cornerbtn}>
-                    {/* add onto this!!
-                    conditional if viewing from library or not
-                    retake/reupload or delete
-                    */}
 
                     {type === "view" && <IconButton onPress={() => remove(id)} icon="delete" size="small" />}
                     {type === "photo" && <IconButton onPress={retake} icon="loop" size="small" />}
                     {type === "" && <IconButton onPress={pickImageAsync} icon="add-to-photos" size="small" />}
       
-
                 </View>
+
                 <View style={styles.dropdownWrapper}>
                     <DropDownPicker
                         style={styles.dropdown}

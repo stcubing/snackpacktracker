@@ -13,6 +13,11 @@ export default function index() {
 
 
     const [fontsLoaded] = useFonts({ FiraCode_400Regular, FiraCode_600SemiBold });
+    if (!fontsLoaded) {
+        return (
+            <View></View>
+        );
+    }
 
     async function toCamera() {
         router.push({pathname: "/cameraPage"})
@@ -84,6 +89,8 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontSize: 35,
         lineHeight: 40,
+        // fontWeight: 'bold',
+        // fontWeight: 'normal',
     },
     version: {
         fontFamily: 'FiraCode_400Regular',

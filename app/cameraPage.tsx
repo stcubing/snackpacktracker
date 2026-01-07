@@ -1,7 +1,7 @@
-import { Camera, CameraType, CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter } from 'expo-router';
 import { useState, useRef, useEffect } from 'react';
-import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import * as Location from 'expo-location';
 import { useIsFocused } from "@react-navigation/native";
 
@@ -34,11 +34,11 @@ export default function CameraPage() {
 			let formattedAddress: string;
             if (location.length > 0) {
                 const address = location[0];
-                formattedAddress = address["street"] + ", " + address["city"] + ", " + address["country"]
+                formattedAddress = address["street"] + ", " + address["city"] + ", " + address["country"];
                 console.log(formattedAddress);
 				
             } else {
-				formattedAddress = "unknown location"
+				formattedAddress = "unknown location";
 			};
 			setLocationValue(formattedAddress);
 

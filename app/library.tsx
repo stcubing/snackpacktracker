@@ -1,11 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Link, router, useFocusEffect } from 'expo-router';
-import * as MediaLibrary from 'expo-media-library';
-import { Image } from 'expo-image';
+import { useCallback, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { router, useFocusEffect } from 'expo-router';
 
-import { saveEntry, loadEntries, clearEntries } from '@/lib/storage';
-import { pickImageAsync } from '@/utils/imageUpload';
+import { loadEntries, clearEntries } from '@/lib/storage';
 import { Entry } from '@/types/entry';
 import IconButton from '@/components/IconButton';
 import TextButton from '@/components/TextButton';
