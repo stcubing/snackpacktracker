@@ -41,23 +41,13 @@ export default function library() {
     );
 
     
-
-    async function clear() {
-        clearEntries();
-        router.replace({ pathname: "/library" })
-    }
-
-    function back() {
-        router.back()
-    }
-    
     return (
         <View style={styles.background}>
             <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
 
 
                 <View style={styles.top} >
-                    <IconButton onPress={back} icon="arrow-back" size="small" />
+                    <IconButton onPress={router.back} icon="arrow-back" size="small" />
                     <Text style={styles.heading}>library</Text>
                 </View>
 
@@ -67,7 +57,7 @@ export default function library() {
                     ))}
                 </View>
 
-                <TextButton onPress={clear} text="clear all"/>
+                <TextButton onPress={clearEntries} text="clear all"/>
                 
             </ScrollView>
         </View>

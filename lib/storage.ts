@@ -4,6 +4,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { File, Paths } from 'expo-file-system';
 import { Platform } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
+import { router } from 'expo-router';
 
 
 
@@ -33,9 +34,20 @@ export async function loadEntries(): Promise<Entry[]> {
 }
 
 export async function clearEntries(): Promise<void> {
+
+    try {
+        const assets = await MediaLibrary.getAssetsAsync();
+        const confirmation = await MediaLibrary.deleteAssetsAsync(assets["assets"]);
     
-    AsyncStorage.setItem("entries", "");
-    console.log("successfully cleared entries");
+        if (confirmation) {
+            AsyncStorage.setItem("entries", "");
+            console.log("successfully cleared entries");
+            router.replace({ pathname: "/library" });
+        }
+        
+    } catch {
+        console.log("clearing cancelled");
+    }
 }
 
 // get specific entry from id (library -> entry page)
@@ -78,26 +90,32 @@ export async function deleteEntry(id: string) {
 
             // BROKEN DELETING SYSTEM.. doesnt work unless i make a dev build 
             try {
-                const { status } = await MediaLibrary.requestPermissionsAsync(false, ['photo']);
+
+                const assets = await MediaLibrary.getAssetsAsync();
+                const specificAsset = assets["assets"].find(item => item.uri === uri);
+
+                if (specificAsset) {
+                    console.log("specific asset:", specificAsset);
+                    const confirmation = await MediaLibrary.deleteAssetsAsync([specificAsset]);
+
+                    if (confirmation) {
+                        console.log("deletion proceed");
     
-                if (status === 'granted') {
-                    console.log("deleting access granted");
-                    const asset = await MediaLibrary.getAssetsAsync(uri);
-                    await MediaLibrary.deleteAssetsAsync([asset])
+                        const index = entries.indexOf(matching);
+                        console.log("removing at index", index);
+                
+                        entries.splice(index, 1);
+                        await AsyncStorage.setItem("entries", JSON.stringify(entries));
+                        console.log(entries);
+                    }
                 }
 
             } catch {
-                console.log("error adsfjhdfja")
+                console.log("deletion denied")
             }
 
         }
 
         
-        const index = entries.indexOf(matching);
-        console.log("removing at index", index);
-
-        entries.splice(index, 1);
-        await AsyncStorage.setItem("entries", JSON.stringify(entries));
-        console.log(entries);
     }
 }

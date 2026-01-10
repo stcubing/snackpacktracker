@@ -42,6 +42,18 @@
     },
     "plugins": [
       [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow location access"
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow camera access"
+        }
+      ],
+      [
         "expo-media-library",
         {
           "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
