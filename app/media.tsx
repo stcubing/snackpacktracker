@@ -147,9 +147,6 @@ export default function media() {
 
         let existing: Entry[] = await loadEntries();
         const newArray: Entry[] = [...existing, newEntry];
-        // console.log(newArray);
-        
-
         saveEntry(newArray);
 
         router.push("/");
@@ -164,7 +161,7 @@ export default function media() {
     async function remove(id: string) {
         console.log("deleting", id);
         await deleteEntry(id);
-        router.back();
+        router.push("/library");
     }
     async function update(id: string) {
         console.log("updating", id);

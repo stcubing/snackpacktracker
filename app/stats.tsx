@@ -29,7 +29,7 @@ export default function stats() {
     });
     
     const [miscStats, setMiscStats] = useState({
-        count: 0, avgRating: 0,
+        count: 0, avgRating: 0, ytdCount: 0,
     });
 
     
@@ -46,11 +46,18 @@ export default function stats() {
 
                     count = data.length; // used for averaging, %s, etc
 
+                    const currentYear = (new Date()).getFullYear();
+
                     // get total of star ratings to average later
                     let totalRating = 0;
                     let avgRating = 0;
+                    let ytdCount = 0;
                     for (const entry in data) {
                         totalRating += data[entry]["rating"];
+                        if (Number(data[entry]["date"].split("/")[2]) == currentYear) {
+                            console.log("same year found")
+                            ytdCount++;
+                        }
                     }
                     if (totalRating !== 0) {
                         avgRating = Math.round(totalRating / count*100) / 100
@@ -62,6 +69,7 @@ export default function stats() {
                     setMiscStats({
                         "count": count,
                         "avgRating": avgRating,
+                        "ytdCount": ytdCount,
                     }) 
 
                     // loop thru each ingredient and populate each statistic
@@ -135,25 +143,20 @@ export default function stats() {
     }
 
 
-    function back() {
-        router.back()
-    }
-
-    function bleh() {
-       
-    }
-
     return (
         <View style={styles.background}>
             <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
                 <View style={styles.top} >
-                    <IconButton onPress={back} icon="arrow-back" size="small" />
+                    <IconButton onPress={router.back} icon="arrow-back" size="small" />
                     <Text style={styles.heading}>statistics</Text>
                 </View>
 
                 <View style={styles.statsContainer}>
 
-                    <StatBox size="small" stat="total snackpacks logged" value={miscStats["count"]} />
+                    <View style={styles.row}>
+                        <StatBox size="small" stat="total count" value={miscStats["count"]} />
+                        <StatBox size="small" stat="year to date" value={miscStats["ytdCount"]} />
+                    </View>
 
                     <View style={styles.row}>
                         <StatBox size="large" stat="chips" value={partStats["chips"]} perc={percStats["chips"]} width={percStats["chips"]} />
@@ -183,7 +186,7 @@ export default function stats() {
                         <StarRatingDisplay
                             style={styles.rating}
                             rating={miscStats["avgRating"]}
-                            onChange={bleh}
+                            onChange={() => {}}
                             color='white'
                             starSize={50}
                             step="quarter"

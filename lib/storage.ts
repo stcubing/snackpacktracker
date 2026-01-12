@@ -8,9 +8,9 @@ import { router } from 'expo-router';
 
 
 
-export async function saveEntry(value: Entry[]) {
+export async function saveEntry(values: Entry[]) {
     try {
-        await AsyncStorage.setItem("entries", JSON.stringify(value));
+        await AsyncStorage.setItem("entries", JSON.stringify(values));
         console.log(`saved array!!`);
     } catch (e) {
         console.error('error: ', e);
@@ -35,19 +35,20 @@ export async function loadEntries(): Promise<Entry[]> {
 
 export async function clearEntries(): Promise<void> {
 
-    try {
-        const assets = await MediaLibrary.getAssetsAsync();
-        const confirmation = await MediaLibrary.deleteAssetsAsync(assets["assets"]);
-    
-        if (confirmation) {
-            AsyncStorage.setItem("entries", "");
-            console.log("successfully cleared entries");
-            router.replace({ pathname: "/library" });
+    // if on web, skip internal storage management
+    if (Platform.OS !== "web") {
+        try {
+            const assets = await MediaLibrary.getAssetsAsync();
+            await MediaLibrary.deleteAssetsAsync(assets["assets"]);
+            
+        } catch {
+            console.log("clearing cancelled");
+            return; // lowkey dont know if this does what i want it to do but whatever
         }
-        
-    } catch {
-        console.log("clearing cancelled");
     }
+    AsyncStorage.setItem("entries", "");
+    console.log("successfully cleared entries");
+    router.replace("/library");
 }
 
 // get specific entry from id (library -> entry page)
@@ -88,7 +89,6 @@ export async function deleteEntry(id: string) {
         if (Platform.OS !== 'web') {
             console.log("deleting image", uri);
 
-            // BROKEN DELETING SYSTEM.. doesnt work unless i make a dev build 
             try {
 
                 const assets = await MediaLibrary.getAssetsAsync();
@@ -96,25 +96,23 @@ export async function deleteEntry(id: string) {
 
                 if (specificAsset) {
                     console.log("specific asset:", specificAsset);
-                    const confirmation = await MediaLibrary.deleteAssetsAsync([specificAsset]);
-
-                    if (confirmation) {
-                        console.log("deletion proceed");
-    
-                        const index = entries.indexOf(matching);
-                        console.log("removing at index", index);
-                
-                        entries.splice(index, 1);
-                        await AsyncStorage.setItem("entries", JSON.stringify(entries));
-                        console.log(entries);
-                    }
+                    await MediaLibrary.deleteAssetsAsync([specificAsset]);
                 }
-
+                
             } catch {
-                console.log("deletion denied")
+                console.log("deletion denied");
+                return;
             }
-
+    
         }
+        console.log("deletion proceed");
+
+        const index = entries.indexOf(matching);
+        console.log("removing at index", index);
+
+        entries.splice(index, 1);
+        await AsyncStorage.setItem("entries", JSON.stringify(entries));
+        console.log(entries);
 
         
     }

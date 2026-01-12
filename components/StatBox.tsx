@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
 
     // },
     smallWrapper: {
+        flex: 1,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between'

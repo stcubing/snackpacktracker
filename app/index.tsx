@@ -11,28 +11,13 @@ import { pickImageAsync } from '@/utils/imageUpload';
 
 export default function index() {
 
-
+    // ensure the font actually loads fskjhsklsdja
     const [fontsLoaded] = useFonts({ FiraCode_400Regular, FiraCode_600SemiBold });
     if (!fontsLoaded) {
         return (
             <View></View>
         );
     }
-
-    async function toCamera() {
-        router.push({pathname: "/cameraPage"})
-    }
-    async function toRandom() {
-        router.push({pathname: "/random"})
-    }
-    async function toStats() {
-        router.push({pathname: "/stats"})
-        console.log("to stats")
-    }
-    async function toLibrary() {
-        router.push({pathname: "/library"})
-    }
-    
 
     return (
         <View style={styles.background}>
@@ -41,21 +26,21 @@ export default function index() {
 
                 <View style={styles.headerText} >
                     <Text style={styles.heading}>snackpacktracker</Text>
-                    <Text style={styles.version}>v0.1</Text>
+                    <Text style={styles.version}>v0.2 (beta)</Text>
                 </View>
             
                 <View style={styles.btnRow}>
-                    <IconButton onPress={toCamera} icon="camera-alt" size="square" />
+                    <IconButton onPress={() => router.push("/cameraPage")} icon="camera-alt" size="square" />
                     <IconButton onPress={pickImageAsync} icon="add-to-photos" size="square" />
                 </View>
 
                 <View style={styles.btnRow}>
-                    <IconButton onPress={toRandom}  icon="dice" size="smallRect" />
-                    <IconButton onPress={toStats} icon="stats-chart" size="smallRect" />
+                    <IconButton onPress={() => router.push("/random")}  icon="dice" size="smallRect" />
+                    <IconButton onPress={() => router.push("/stats")} icon="stats-chart" size="smallRect" />
                 </View>
                 
                 <View style={styles.btnRow}>
-                    <IconButton onPress={toLibrary} icon="photo-library" size="smallRect" />
+                    <IconButton onPress={() => router.push("/library")} icon="photo-library" size="smallRect" />
                 </View>
 
             </View>

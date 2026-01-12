@@ -54,6 +54,37 @@ export default function CameraPage() {
 
 	// }, [location]);
 
+	// TODO: rework location getting so that it doesnt break the entire app
+	// why does it break the app brah
+	// - requesting permissions?
+	// - dawg idk
+
+	// intended flow:
+	// - get permissions
+	// - get position
+	// - turn pos coordinates into usable data
+	// - save usable data and pass onto next page
+
+	async function getLocation() {
+		const locationPerms = await Location.requestForegroundPermissionsAsync();
+		console.log("permstatus:", locationPerms);
+		setLocationValue(locationPerms.status);
+		
+		if (locationPerms.status === "granted") {
+			console.log("location permissions granted")
+			let coords = await Location.getCurrentPositionAsync({});
+			// setLocationValue(coords);
+			console.log(coords);
+			console.log("latitude:", coords.coords.latitude);
+			
+		}
+	}
+
+
+	useEffect(() => {
+		getLocation();
+	}, []);
+
 	// cam permissions not loaded yet
 	if (!permission) {
 		return <View />;
@@ -125,6 +156,8 @@ export default function CameraPage() {
 					<CameraView style={styles.camera} facing={facing} ref={cameraRef} />
 				)}
 			</View>
+
+			<Text style={styles.text}>locVal: {locationValue}</Text>
 
 			<View style={styles.buttonContainer}>
 				<IconButton onPress={back} icon="arrow-back" size="small" />

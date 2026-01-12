@@ -7,22 +7,33 @@ import { MaterialIcons, FontAwesome, Ionicons, FontAwesome5 } from '@expo/vector
 
 type Props = {
     text: string;
+    active?: boolean;
     onPress: () => void;
 };
 
-export default function TextButton({ text, onPress }: Props) {
+export default function TextButton({ text, active, onPress }: Props) {
 
     const [fontsLoaded] = useFonts({ FiraCode_400Regular, FiraCode_600SemiBold });
 
-    return (
-        <Pressable style={styles.buttonWrapper} onPress={onPress}>
-            <Text style={styles.buttonText} >{text}</Text>
-        </Pressable>
-    );
+    if (active) {
+        return (
+            <Pressable style={[styles.buttonWrapper, styles.activeWrapper]} onPress={onPress}>
+                <Text style={[styles.buttonText, styles.activeText]} >{text}</Text>
+            </Pressable>
+        );
+    } else {
+        return (
+            <Pressable style={styles.buttonWrapper} onPress={onPress}>
+                <Text style={styles.buttonText} >{text}</Text>
+            </Pressable>
+        );
+
+    }
 }
 
 const styles = StyleSheet.create({
     buttonWrapper: {
+        flex: 1,
         backgroundColor: '#141414', 
         justifyContent: 'center',
         alignItems: 'center',
@@ -41,6 +52,13 @@ const styles = StyleSheet.create({
         fontFamily: 'FiraCode_600SemiBold',
         color: 'white',
         fontSize: 20,
+    },
+
+    activeWrapper: {
+        backgroundColor: '#e9e9e9',
+    },
+    activeText: {
+        color: '#141414',
     }
     
 });

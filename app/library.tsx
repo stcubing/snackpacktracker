@@ -1,8 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 
-import { loadEntries, clearEntries } from '@/lib/storage';
+import { loadEntries, clearEntries, saveEntry } from '@/lib/storage';
 import { Entry } from '@/types/entry';
 import IconButton from '@/components/IconButton';
 import TextButton from '@/components/TextButton';
@@ -16,39 +16,139 @@ export default function library() {
     // const entryList: Entry[] = [];
     const [entryList, setEntrylist] = useState<Entry[]>([]);
 
+    const [latestSort, setLatestSort] = useState<boolean>();
+    const [oldestSort, setOldestSort] = useState<boolean>();
+    const [bestSort, setBestSort] = useState<boolean>();
+    const [worstSort, setWorstSort] = useState<boolean>();
+
+    const [sortType, setSortType] = useState<string>('');
+
+
+    let data: Entry[];
+    
     useFocusEffect(
         useCallback(() => {
+            
+            const refreshData = async () => {
+                console.log("refreshing data");
+                switchSort(sortType);
+            }
 
-            const fetchData = async () => {
-                try {
-                    let data: Entry[] = await loadEntries();
-        
-                    data.sort((a, b) => a.ms - b.ms).reverse(); // sort chronologically
-                    console.log(data);
-        
-                    setEntrylist(data);
-        
-                } catch (error) {
-                    console.log("error fetching data", error);
-                }
-                
-            };
-
-            fetchData();
-
-        
+            refreshData();
+            
         }, [])
     );
+    
+    useEffect(() => {
+        // default sort type if none are selected
+        if (!latestSort && !oldestSort && !bestSort && !worstSort) {
+            console.log("no sorting method selected");
+            switchSort("latest");
+        }
+        
+    }, []);
+
+    const switchSort = async (switchTo: string) => {
+        data = await loadEntries();
+
+        if (!data) {
+            return;
+        }
+        switch (switchTo) {
+            case "latest":
+                data.sort((a, b) => a.ms - b.ms).reverse();
+                setEntrylist(data);
+        
+                setLatestSort(true);
+                setOldestSort(false);
+                setBestSort(false);
+                setWorstSort(false);
+                break;
+                
+            case "oldest":
+                data.sort((a, b) => a.ms - b.ms);
+                setEntrylist(data);
+                
+                setLatestSort(false);
+                setOldestSort(true);
+                setBestSort(false);
+                setWorstSort(false);
+                break;
+
+            case "best":
+                data.sort((a, b) => a.rating - b.rating).reverse();
+                setEntrylist(data);
+                
+                setLatestSort(false);
+                setOldestSort(false);
+                setBestSort(true);
+                setWorstSort(false);
+                break;
+            
+            case "worst":
+                data.sort((a, b) => a.rating - b.rating);
+                setEntrylist(data);
+                
+                setLatestSort(false);
+                setOldestSort(false);
+                setBestSort(false);
+                setWorstSort(true);
+                break;
+        }
+        setSortType(switchTo);
+    }
+
+    const importData = async (importType: string) => {
+
+        // open documentpicker or whatveer to pick a file
+        // read that file and convert it into an Entry[]
+
+        
+        // for each of these entries, make an image file in internal storage asw
+        // oh actually idk how importing images works lol wtf
+        
+        // let importedEntries: Entry[]; // maybe define the shape first and for each thingy in the file fill out that shape IDK
+
+        // if (importType == "overwrite") {
+        //     console.log("overwrite");
+
+        //     clearEntries();
+            
+            
+        //     saveEntry(importedEntries); // instead of adding just save directly
+
+        //     // replace thing with thing
+
+        // } else {
+        //     console.log("merge");
+        //     // do the add thing
+        //     let existing: Entry[] = await loadEntries();
+        //     const newArray: Entry[] = [...existing, importedEntries];
+        //     saveEntry(newArray);
+        // }
+        // router.replace("/library");
+    }
+    const exportData = async () => {
+        data = await loadEntries();
+        console.log("exporting", data);
+        
+    }
 
     
     return (
         <View style={styles.background}>
             <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
 
-
                 <View style={styles.top} >
-                    <IconButton onPress={router.back} icon="arrow-back" size="small" />
+                    <IconButton onPress={() => router.push("/")} icon="arrow-back" size="small" />
                     <Text style={styles.heading}>library</Text>
+                </View>
+
+                <View style={styles.btnRow}>
+                    <TextButton text="latest" onPress={() => switchSort("latest")} active={latestSort}/>
+                    <TextButton text="oldest" onPress={() => switchSort("oldest")} active={oldestSort} />
+                    <TextButton text="best" onPress={() => switchSort("best")} active={bestSort} />
+                    <TextButton text="worst" onPress={() => switchSort("worst")} active={worstSort} />
                 </View>
 
                 <View style={styles.entryContainer}>
@@ -58,6 +158,12 @@ export default function library() {
                 </View>
 
                 <TextButton onPress={clearEntries} text="clear all"/>
+                <br></br>
+                <View style={styles.btnRow}>
+                    <TextButton text="overwrite" onPress={() => importData("overwrite")}/>
+                    <TextButton text="merge" onPress={() => importData("merge")}/>
+                    <TextButton text="export" onPress={exportData}/>
+                </View>
                 
             </ScrollView>
         </View>
@@ -99,15 +205,22 @@ const styles = StyleSheet.create({
     },
 
     entryContainer: {
-        // width: '100%',
-        // backgroundColor: 'red',
         display: 'flex',
         justifyContent: 'flex-start',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        // flex
         gap: 5,
-        marginBottom: 30
+        marginBottom: 30,
+    },
+
+    btnRow: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 10,
+        marginBottom: 10,
+
     },
   
 
