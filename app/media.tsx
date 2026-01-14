@@ -104,12 +104,31 @@ export default function media() {
     }, []);
 
     useEffect(() => {
-        console.log("locagtion is this:", location);
+        // console.log("locagtion is this:", location);
+
+        // async function brah() {
+        //     let updLocation = await getLocation();
+
+        //     if (updLocation) {
+        //         console.log("setting location")
+        //         setLocationValue(updLocation);
+        //     } else {
+        //         console.log("NO LOCATRION AJKAJSKLASDJKDJKDSAJKLDADJKL")
+        //     }
+
+        // }
+        // brah();
+        // // console.log('hi');
+
+
+        // getLocation();
+
         if (location) {
-            console.log("setting location")
+            console.log('late updating location to', location);
             setLocationValue(location.toString());
         }
-    }, [location])
+
+    }, [location]);
 
 
     // pushes the log into storage + goes home

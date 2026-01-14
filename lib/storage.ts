@@ -117,3 +117,27 @@ export async function deleteEntry(id: string) {
         
     }
 }
+
+// export async function saveLocation(loc: string) {
+//     try {
+//         console.log('saved LOCAIOTN!! as', loc);
+//         await AsyncStorage.setItem("location", loc);
+//     } catch (e) {
+//         console.error('error: ', e);
+//     }
+// }
+// export async function getLocation() {
+//     console.log("trying to fetch location");
+//     const fetchedLocation = await AsyncStorage.getItem("location");
+
+//     if (fetchedLocation) {
+//         console.log("location found from storage");
+//         return fetchedLocation;
+//     } else {
+//         console.log("n location found");
+//     }
+// }
+// export async function clearLocation() {
+//     console.log("clearing location");
+//     await AsyncStorage.setItem("location", "");
+// }

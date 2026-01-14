@@ -6,6 +6,7 @@ import * as Location from 'expo-location';
 import { useIsFocused } from "@react-navigation/native";
 
 import IconButton from '@/components/IconButton';
+// import { } from '@/lib/storage';
 
 export default function CameraPage() {
 
@@ -15,7 +16,7 @@ export default function CameraPage() {
 	const [facing, setFacing] = useState<CameraType>('back');
 	const [permission, requestPermission] = useCameraPermissions();
 
-	const [locationValue, setLocationValue] = useState('');
+	const [locationValue, setLocationValue] = useState<string>('');
 
 	const isFocused = useIsFocused();
 
@@ -68,14 +69,38 @@ export default function CameraPage() {
 	async function getLocation() {
 		const locationPerms = await Location.requestForegroundPermissionsAsync();
 		console.log("permstatus:", locationPerms);
-		setLocationValue(locationPerms.status);
+		// setLocationValue(locationPerms.status);
 		
 		if (locationPerms.status === "granted") {
-			console.log("location permissions granted")
+			console.log("location permissions granted, getting location");
 			let coords = await Location.getCurrentPositionAsync({});
 			// setLocationValue(coords);
-			console.log(coords);
-			console.log("latitude:", coords.coords.latitude);
+			// console.log(coords);
+			// console.log("latitude:", coords.coords.latitude);
+
+			let latitude = coords.coords.latitude;
+			let longitude = coords.coords.longitude;
+
+
+			let location = await Location.reverseGeocodeAsync({ latitude, longitude });
+
+			let formattedAddress: string;
+            if (location.length > 0) {
+                const address = location[0];
+                formattedAddress = address["street"] + ", " + address["city"] + ", " + address["country"];
+				
+            } else {
+				formattedAddress = "unknown location";
+			};
+			setLocationValue(formattedAddress);
+
+			console.log("we Fianlly got You're addres.", formattedAddress);
+			// saveLocation(formattedAddress);
+
+			router.setParams({
+				location: formattedAddress,
+			});
+
 			
 		}
 	}
@@ -157,7 +182,7 @@ export default function CameraPage() {
 				)}
 			</View>
 
-			<Text style={styles.text}>locVal: {locationValue}</Text>
+			{/* <Text style={styles.text}>locVal: {locationValue}</Text> */}
 
 			<View style={styles.buttonContainer}>
 				<IconButton onPress={back} icon="arrow-back" size="small" />
