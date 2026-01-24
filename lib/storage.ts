@@ -37,12 +37,13 @@ export async function clearEntries(): Promise<void> {
 
     // if on web, skip internal storage management
     if (Platform.OS !== "web") {
+        // const perm = await MediaLibrary.requestPermissionsAsync()  whatever bro
         try {
             const assets = await MediaLibrary.getAssetsAsync();
             await MediaLibrary.deleteAssetsAsync(assets["assets"]);
             
-        } catch {
-            console.log("clearing cancelled");
+        } catch (error) {
+            console.log("clearing cancelled", error);
             return; // lowkey dont know if this does what i want it to do but whatever
         }
     }

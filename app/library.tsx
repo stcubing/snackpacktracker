@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
+import { File, Paths } from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import { jsonToCSV } from 'react-native-csv';
 
 import { loadEntries, clearEntries, saveEntry } from '@/lib/storage';
 import { Entry } from '@/types/entry';
@@ -130,7 +133,25 @@ export default function library() {
     }
     const exportData = async () => {
         data = await loadEntries();
-        console.log("exporting", data);
+        const csvData = jsonToCSV(data);
+        console.log("exporting", csvData);
+
+        const currentDate = new Date();
+
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
+        const day = currentDate.getDate();
+
+        const filename = `spt${day}-${month}-${year}.csv`
+
+        try {
+            const file = new File(Paths.cache, filename);
+            file.write(csvData);
+            console.log("file says:", file.textSync());
+            Sharing.shareAsync(file.uri);
+        } catch (error) {
+            console.error(error);
+        }
         
     }
 
@@ -158,8 +179,7 @@ export default function library() {
                 </View>
 
                 <TextButton onPress={clearEntries} text="clear all"/>
-                <br></br>
-                <View style={styles.btnRow}>
+                <View style={[styles.btnRow, styles.ioRow]}>
                     <TextButton text="overwrite" onPress={() => importData("overwrite")}/>
                     <TextButton text="merge" onPress={() => importData("merge")}/>
                     <TextButton text="export" onPress={exportData}/>
@@ -222,6 +242,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
 
     },
+    ioRow: {
+        marginTop: 10,
+    }
   
 
     
