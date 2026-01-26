@@ -13,6 +13,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 import IconButton from "@/components/IconButton";
 import TextButton from "@/components/TextButton";
+import { File, Paths } from "expo-file-system";
 
 
 export default function media() {
@@ -136,12 +137,28 @@ export default function media() {
 
         console.log("submit pressed")
 
+        const permission = await MediaLibrary.requestPermissionsAsync();
+        console.log(permission);
+
+
             
         let newUri = media;
         // save file
         if (Platform.OS !== 'web') {
-            // const newUri = await MediaLibrary.saveToLibraryAsync(media);
-            newUri = (await MediaLibrary.createAssetAsync(media)).uri;
+            
+            const newItem = await MediaLibrary.createAssetAsync(media);
+            let newFile;
+
+            const existingFolder = await MediaLibrary.getAlbumAsync("snackpacktracker");
+            if (!existingFolder) {
+                await MediaLibrary.createAlbumAsync("snackpacktracker", newItem, true); // make folder if it doesnt already exist, move to that
+            } else {
+                MediaLibrary.addAssetsToAlbumAsync(media, existingFolder.id, true); // otherwise just move
+            }
+            await MediaLibrary.deleteAssetsAsync(media); // delete old one
+
+            newUri = media;
+
             console.log("new uri", newUri);
         }
 

@@ -313,6 +313,7 @@ const styles = StyleSheet.create({
     },
     ioRow: {
         marginTop: 10,
+        marginBottom: 50,
     }
   
 

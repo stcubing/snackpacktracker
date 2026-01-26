@@ -33,13 +33,17 @@ export async function loadEntries(): Promise<Entry[]> {
     }
 }
 
-export async function clearEntries(type?: string): Promise<void> {
+export async function clearEntries(from?: string): Promise<void> {
+
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== 'granted') return;
 
     // if on web, skip internal storage management
     if (Platform.OS !== "web") {
         // const perm = await MediaLibrary.requestPermissionsAsync()  whatever bro
         try {
-            const assets = await MediaLibrary.getAssetsAsync();
+            const album = await MediaLibrary.getAlbumAsync("snackpacktracker");
+            const assets = await MediaLibrary.getAssetsAsync({ album });
             await MediaLibrary.deleteAssetsAsync(assets["assets"]);
             
         } catch (error) {
@@ -47,10 +51,10 @@ export async function clearEntries(type?: string): Promise<void> {
             return; // comment out if in go UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
     }
-    AsyncStorage.setItem("entries", "");
+    await AsyncStorage.setItem("entries", JSON.stringify([]));
     console.log("successfully cleared entries");
 
-    if (type == "direct") {
+    if (from == "direct") {
         router.replace("/library")
     };
     
@@ -87,6 +91,9 @@ export async function getEntry(id: string) {
 export async function deleteEntry(id: string) {
     const entries = await Promise.all(await loadEntries());
     const matching = entries.find(item => item.id == id); // gets entry with matching id
+
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== 'granted') return;
     
     if (matching) {
         const uri: string = matching["photo"];
@@ -104,8 +111,8 @@ export async function deleteEntry(id: string) {
                     await MediaLibrary.deleteAssetsAsync([specificAsset]);
                 }
                 
-            } catch {
-                console.log("deletion denied");
+            } catch (error) {
+                console.log("deletion denied", error);
                 return; // UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             }
     

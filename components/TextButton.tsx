@@ -24,7 +24,7 @@ export default function TextButton({ text, active, onPress }: Props) {
     } else {
         return (
             <Pressable style={styles.buttonWrapper} onPress={onPress}>
-                <Text style={styles.buttonText} >{text}</Text>
+                <Text style={styles.buttonText}>{text}</Text>
             </Pressable>
         );
 

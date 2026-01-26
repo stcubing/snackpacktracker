@@ -49,16 +49,17 @@ export default function stats() {
                     const currentYear = (new Date()).getFullYear();
 
                     // get total of star ratings to average later
-                    let totalRating = 0;
-                    let avgRating = 0;
-                    let ytdCount = 0;
+                    let totalRating: number = 0;
+                    let avgRating: number = 0;
+                    let ytdCount: number = 0;
                     for (const entry in data) {
-                        totalRating += data[entry]["rating"];
+                        totalRating += Number(data[entry]["rating"]);
                         if (Number(data[entry]["date"].split("/")[2]) == currentYear) {
-                            console.log("same year found")
+                            // console.log("same year found")
                             ytdCount++;
                         }
                     }
+                    // console.log("total rating", totalRating)
                     if (totalRating !== 0) {
                         avgRating = Math.round(totalRating / count*100) / 100
                     } else {
@@ -154,8 +155,8 @@ export default function stats() {
                 <View style={styles.statsContainer}>
 
                     <View style={styles.row}>
-                        <StatBox size="small" stat="total count" value={miscStats["count"]} />
-                        <StatBox size="small" stat="year to date" value={miscStats["ytdCount"]} />
+                        <StatBox size="small" stat="total" value={miscStats["count"]} />
+                        <StatBox size="small" stat="ytd" value={miscStats["ytdCount"]} />
                     </View>
 
                     <View style={styles.row}>

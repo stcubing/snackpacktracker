@@ -1,4 +1,3 @@
-import TextButton from "@/components/TextButton";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -6,6 +5,7 @@ import { FiraCode_400Regular, useFonts } from '@expo-google-fonts/fira-code';
 import { router } from 'expo-router';
 import IconButton from "@/components/IconButton";
 import TextBox from "@/components/TextBox";
+import TextButton from "@/components/TextButton";
 
 export default function random() {
 
@@ -96,7 +96,7 @@ export default function random() {
                 </View>
 
                 <View style={styles.button}>
-                    <TextButton text="reroll" onPress={reroll} />
+                    <TextButton onPress={reroll} text="reroll"/>
                 </View>
             </View>
         </View>
@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
         height: '100%',
 
         display: 'flex',
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         
@@ -153,6 +154,8 @@ const styles = StyleSheet.create({
 
     button: {
         marginTop: 'auto',
+        height: 70,
+        
     },
     subtext: {
         fontFamily: 'FiraCode_400Regular',
