@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
+
+import * as DocumentPicker from 'expo-document-picker';
 import { File, Paths } from 'expo-file-system';
+import Papa from 'papaparse';
+
 import * as Sharing from 'expo-sharing';
 import { jsonToCSV } from 'react-native-csv';
 
@@ -10,6 +14,7 @@ import { Entry } from '@/types/entry';
 import IconButton from '@/components/IconButton';
 import TextButton from '@/components/TextButton';
 import EntryButton from '@/components/EntryButton';
+import { generateUUID } from '@/utils/uuid';
 
 
 
@@ -51,6 +56,7 @@ export default function library() {
         
     }, []);
 
+    // called whenever either of the four sorting option buttons are clicked
     const switchSort = async (switchTo: string) => {
         data = await loadEntries();
 
@@ -130,7 +136,70 @@ export default function library() {
         //     saveEntry(newArray);
         // }
         // router.replace("/library");
+
+        const result = await DocumentPicker.getDocumentAsync({ type: "text/comma-separated-values" });
+
+        if (!result.canceled) {
+
+            const fileUri = result.assets[0].uri;
+            console.log("fileUri", fileUri)
+            const file = new File(fileUri);
+            
+            try {
+                const csvText = file.textSync(); // read file
+                console.log("read this from the file:", csvText);
+    
+                // csv -> array
+                const arrayedCsv = Papa.parse(csvText, { header: true });
+                const parsed: Entry[] = arrayedCsv.data;
+                console.log(parsed);
+                
+                // generate new ids for imported ones
+                for (let entry in parsed) {
+                    parsed[entry].id = generateUUID();
+                    console.log(parsed[entry]);
+                }
+                // console.log("new parsed:", parsed);
+                
+                // split
+                try {
+                    if (importType == "overwrite") {
+                        console.log("overwriting");
+            
+                        await clearEntries();
+
+                        const newArray: Entry[] = [...parsed];
+                        saveEntry(newArray);
+                        console.log("newarray", newArray)
+            
+                    } else {
+                        console.log("merging");
+
+                        // do the add thing
+                        let existing: Entry[] = await loadEntries();
+                        const newArray: Entry[] = [...existing, ...parsed];
+                        saveEntry(newArray);
+                        console.log("newarray", newArray);
+                    }
+
+                    router.replace("/library");
+
+
+                } catch {
+                    console.log("man idk");
+                }
+
+            } catch (error) {
+                console.log("cant read file", error);
+                return;
+            }
+            
+
+
+        }
     }
+
+    // saves a csv of ur entries
     const exportData = async () => {
         data = await loadEntries();
         const csvData = jsonToCSV(data);
@@ -178,7 +247,7 @@ export default function library() {
                     ))}
                 </View>
 
-                <TextButton onPress={clearEntries} text="clear all"/>
+                <TextButton onPress={() => clearEntries("direct")} text="clear all"/>
                 <View style={[styles.btnRow, styles.ioRow]}>
                     <TextButton text="overwrite" onPress={() => importData("overwrite")}/>
                     <TextButton text="merge" onPress={() => importData("merge")}/>

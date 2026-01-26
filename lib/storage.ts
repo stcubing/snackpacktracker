@@ -33,7 +33,7 @@ export async function loadEntries(): Promise<Entry[]> {
     }
 }
 
-export async function clearEntries(): Promise<void> {
+export async function clearEntries(type?: string): Promise<void> {
 
     // if on web, skip internal storage management
     if (Platform.OS !== "web") {
@@ -44,12 +44,16 @@ export async function clearEntries(): Promise<void> {
             
         } catch (error) {
             console.log("clearing cancelled", error);
-            return; // lowkey dont know if this does what i want it to do but whatever
+            // return; // comment out if in go UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
     }
     AsyncStorage.setItem("entries", "");
     console.log("successfully cleared entries");
-    router.replace("/library");
+
+    if (type == "direct") {
+        router.replace("/library")
+    };
+    
 }
 
 // get specific entry from id (library -> entry page)
@@ -102,7 +106,7 @@ export async function deleteEntry(id: string) {
                 
             } catch {
                 console.log("deletion denied");
-                return;
+                // return; // UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             }
     
         }
