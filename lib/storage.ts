@@ -44,7 +44,7 @@ export async function clearEntries(type?: string): Promise<void> {
             
         } catch (error) {
             console.log("clearing cancelled", error);
-            // return; // comment out if in go UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            return; // comment out if in go UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
     }
     AsyncStorage.setItem("entries", "");
@@ -106,7 +106,7 @@ export async function deleteEntry(id: string) {
                 
             } catch {
                 console.log("deletion denied");
-                // return; // UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                return; // UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             }
     
         }
