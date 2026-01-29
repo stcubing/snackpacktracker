@@ -14,6 +14,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import IconButton from "@/components/IconButton";
 import TextButton from "@/components/TextButton";
 import { File, Paths } from "expo-file-system";
+import * as FileSystem from 'expo-file-system/legacy';
 
 
 export default function media() {
@@ -137,29 +138,64 @@ export default function media() {
 
         console.log("submit pressed")
 
-        const permission = await MediaLibrary.requestPermissionsAsync();
-        console.log(permission);
-
-
-            
         let newUri = media;
-        // save file
-        if (Platform.OS !== 'web') {
+
+        // save file 
+        // bruh
+        // if (Platform.OS !== 'web') {
             
-            const newItem = await MediaLibrary.createAssetAsync(media);
-            let newFile;
+        //     // const existingFolder = await MediaLibrary.getAlbumAsync("snackpacktracker");
+        //     // if (!existingFolder) {
+        //     //     await MediaLibrary.createAlbumAsync("snackpacktracker", newItem, true); // make folder if it doesnt already exist, move to that
+        //     // } else {
+        //     //     await MediaLibrary.addAssetsToAlbumAsync([newItem], existingFolder.id, true); // otherwise just move
+        //     // }
+        //     const newItem = await MediaLibrary.createAssetAsync(media);
 
-            const existingFolder = await MediaLibrary.getAlbumAsync("snackpacktracker");
-            if (!existingFolder) {
-                await MediaLibrary.createAlbumAsync("snackpacktracker", newItem, true); // make folder if it doesnt already exist, move to that
-            } else {
-                MediaLibrary.addAssetsToAlbumAsync(media, existingFolder.id, true); // otherwise just move
-            }
-            await MediaLibrary.deleteAssetsAsync(media); // delete old one
+            
+        //     // const asset = await MediaLibrary.getAssetInfoAsync(newItem.id);
+        //     // console.log(asset);
 
-            newUri = media;
+        //     const album = await MediaLibrary.createAlbumAsync("snackpacktracker", newItem, false); // make folder if it doesnt already exist, move to that
 
-            console.log("new uri", newUri);
+        //     // const newAsset = await MediaLibrary.getAssetInfoAsync(newItem.id);
+
+        //     const albumAssets = await MediaLibrary.getAssetsAsync({
+        //         album: album,
+        //         first: 100, // adjust as needed
+        //     });
+
+        //     // Find the specific asset we just added
+        //     // const movedAsset = albumAssets.assets.find(asset => asset.id === newItem.id);
+        //     // console.log("moved asset", movedAsset)
+
+        //     // if (movedAsset) {
+        //     //     const assetInfo = await MediaLibrary.getAssetInfoAsync(movedAsset.id);
+        //     //     console.log("New URI:", assetInfo?.localUri || assetInfo?.uri);
+        //     // }
+
+        //     // const newerItem = await MediaLibrary.createAssetAsync(newItem.uri);
+        //     // console.log("newer: ", newerItem);
+            
+            
+        //     // const oldFile = new File(media);
+        //     // oldFile.delete();
+            
+        //     // const assets = await MediaLibrary.getAssetsAsync({album});
+        //     // console.log("assets", assets);
+            
+        //     // let bleh = newItem.uri.toString();
+        //     // newUri = bleh.replace("DCIM", "snackpacktracker"); // does this even do anything
+
+        //     // console.log("asset uri", asset.uri);
+        //     // MediaLibrary.getAssetsAsync()
+
+        // }
+        if (Platform.OS !== 'web') {
+            // const newUri = await MediaLibrary.saveToLibraryAsync(media);
+            let newAsset = await MediaLibrary.createAssetAsync(media);
+            newUri = newAsset.uri;
+            console.log("new uasdasddsari", newUri);
         }
 
         if (locationValue == "loading location...") {
@@ -186,6 +222,8 @@ export default function media() {
         saveEntry(newArray);
 
         router.push("/");
+
+            
 
     }
 

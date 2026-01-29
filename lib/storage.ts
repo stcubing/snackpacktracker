@@ -35,15 +35,16 @@ export async function loadEntries(): Promise<Entry[]> {
 
 export async function clearEntries(from?: string): Promise<void> {
 
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== 'granted') return;
 
     // if on web, skip internal storage management
     if (Platform.OS !== "web") {
         // const perm = await MediaLibrary.requestPermissionsAsync()  whatever bro
         try {
-            const album = await MediaLibrary.getAlbumAsync("snackpacktracker");
-            const assets = await MediaLibrary.getAssetsAsync({ album });
+            // const album = await MediaLibrary.getAlbumAsync("snackpacktracker");
+            // const album = await MediaLibrary.getAlbumAsync();
+            // MediaLibrary.deleteAlbumsAsync([album]);
+            
+            const assets = await MediaLibrary.getAssetsAsync();
             await MediaLibrary.deleteAssetsAsync(assets["assets"]);
             
         } catch (error) {
@@ -57,6 +58,7 @@ export async function clearEntries(from?: string): Promise<void> {
     if (from == "direct") {
         router.replace("/library")
     };
+
     
 }
 
@@ -92,8 +94,8 @@ export async function deleteEntry(id: string) {
     const entries = await Promise.all(await loadEntries());
     const matching = entries.find(item => item.id == id); // gets entry with matching id
 
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== 'granted') return;
+
+    console.log("matching:", matching);
     
     if (matching) {
         const uri: string = matching["photo"];
@@ -102,13 +104,17 @@ export async function deleteEntry(id: string) {
             console.log("deleting image", uri);
 
             try {
-
+                // const album = await MediaLibrary.getAlbumAsync("snackpacktracker");
+                // const assets = await MediaLibrary.getAssetsAsync({album});
                 const assets = await MediaLibrary.getAssetsAsync();
+                console.log("assets", assets)
                 const specificAsset = assets["assets"].find(item => item.uri === uri);
 
                 if (specificAsset) {
                     console.log("specific asset:", specificAsset);
                     await MediaLibrary.deleteAssetsAsync([specificAsset]);
+                } else {
+                    console.log("cannot find asset");
                 }
                 
             } catch (error) {
