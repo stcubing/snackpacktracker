@@ -26,7 +26,7 @@ export default function index() {
 
                 <View style={styles.headerText} >
                     <Text style={styles.heading}>snackpacktracker</Text>
-                    <Text style={styles.version}>v0.2 (beta)</Text>
+                    <Text style={styles.version}>v0.3 (beta)</Text>
                 </View>
             
                 <View style={styles.btnRow}>
