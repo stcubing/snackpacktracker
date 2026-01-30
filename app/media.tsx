@@ -231,12 +231,6 @@ export default function media() {
     function retake() {
         router.push('/cameraPage');
     }
-
-    async function remove(id: string) {
-        console.log("deleting", id);
-        await deleteEntry(id);
-        router.push("/library");
-    }
     async function update(id: string) {
         console.log("updating", id);
         await deleteEntry(id);
@@ -290,7 +284,7 @@ export default function media() {
                 </View>
                 <View style={styles.cornerbtn}>
 
-                    {type === "view" && <IconButton onPress={() => remove(id)} icon="delete" size="small" />}
+                    {type === "view" && <IconButton onPress={() => deleteEntry(id)} icon="delete" size="small" />}
                     {type === "photo" && <IconButton onPress={retake} icon="loop" size="small" />}
                     {type === "" && <IconButton onPress={pickImageAsync} icon="add-to-photos" size="small" />}
       

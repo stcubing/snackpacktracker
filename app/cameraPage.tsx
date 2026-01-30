@@ -116,12 +116,7 @@ export default function CameraPage() {
 	}
 
 	if (!permission.granted) {
-		return (
-		<View style={styles.container}>
-			<Text style={styles.message}>give permission to use camera</Text>
-			<Button onPress={requestPermission} title="grant permission" />
-		</View>
-		);
+		requestPermission();
 	}
 
 	// go back

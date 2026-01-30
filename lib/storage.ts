@@ -35,6 +35,10 @@ export async function loadEntries(): Promise<Entry[]> {
 
 export async function clearEntries(from?: string): Promise<void> {
 
+    const permission = await MediaLibrary.getPermissionsAsync();
+    if (permission.status !== "granted") {
+        await MediaLibrary.requestPermissionsAsync();
+    }
 
     // if on web, skip internal storage management
     if (Platform.OS !== "web") {
@@ -91,6 +95,14 @@ export async function getEntry(id: string) {
 
 // delete specific entry based on id
 export async function deleteEntry(id: string) {
+
+    console.log("deleting", id);
+
+    const permission = await MediaLibrary.getPermissionsAsync();
+    if (permission.status !== "granted") {
+        await MediaLibrary.requestPermissionsAsync();
+    }
+
     const entries = await Promise.all(await loadEntries());
     const matching = entries.find(item => item.id == id); // gets entry with matching id
 
@@ -131,9 +143,11 @@ export async function deleteEntry(id: string) {
         entries.splice(index, 1);
         await AsyncStorage.setItem("entries", JSON.stringify(entries));
         console.log(entries);
-
-        
+    
     }
+
+    router.dismiss();
+    router.replace("/library");
 }
 
 // export async function saveLocation(loc: string) {
