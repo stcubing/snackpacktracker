@@ -47,6 +47,9 @@ Oh yeah also towards the end of developing this app I messed up permissions and 
    <img src="images/death.png" width="300" />
 </p>
 
+
+I'll likely keep working on this in the future, adding more features/fixing bugs as I find them, and probably cleaning up the code. There's a few things I dropped developing because they were too trivial or too difficult (for me at least), such as fetching location from an imported image's metadata, or saving and reading from a designated album instead of just DCIM. All later issues, though :P
+
 ## installing
 
 Run
