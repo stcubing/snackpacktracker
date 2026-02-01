@@ -2,8 +2,9 @@
 
 This is snackpacktracker, a very scuffed (but functional) mobile app I created using React Native Expo to support my unhealthy obsession with the Australian 'Halal Snack Pack' (HSP).
 
-<img src="images/home.png" width="300" />
-
+<p align="middle">
+   <img src="images/home.png" width="300" />
+</p>
 
 ## features
 
@@ -12,16 +13,19 @@ snackpacktracker allows you to quickly snap a photo of your HSP and log your ord
 
 Submitted entries can be viewed in the 'library' page, and can be sorted ascending/descending by date or rating. All entries can be cleared with the 'clear all' button, and clicking on an entry allows you to delete a specific entry, as well as edit and update any of the details. All entries can be exported as a ```.csv``` file, which can then be imported to either overwrite or merge with existing entries.
 
-<img src="images/media.png" width="300" />
-<img src="images/library.png" width="300" />
+<p align="middle">
+   <img src="images/media.png" width="300" />
+   <img src="images/library.png" width="300" />
+</p>
 
 <br>
 
 Other features include a HSP randomiser, which displays a random combination of components to make a HSP whenever you have no clue what to order, as well as a statistics page that displays a whole bunch of information about your entries, including numbers/percentages for each HSP component, the average rating across all entries, and totals (lifetime, year to date).
 
-<img src="images/random.png" width="300" />
-<img src="images/stats.png" width="300" />
-
+<p align="middle">
+   <img src="images/random.png" width="300" />
+   <img src="images/stats.png" width="300" />
+</p>
 
 ## process + lore and yapping
 
@@ -39,7 +43,9 @@ While my knowledge on this technology is still extremely amateurish, I learnt a 
 
 Oh yeah also towards the end of developing this app I messed up permissions and the app ended up deleting 100 photos from my camera roll without recovery LOL we live and we learn :sob:
 
-<img src="images/death.png" width="300" />
+<p align="middle">
+   <img src="images/death.png" width="300" />
+</p>
 
 ## installing
 
